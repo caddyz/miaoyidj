@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index",
+    "pages/counter",
+    "pages/info",
+    "pages/shopcart",
+    {
+      "path": "packageA/logs",
+      "subPackage": true
+    }
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "妙伊到家",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#fafafa",
+    "selectedColor": "#333",
+    "borderStyle": "white",
+
+    "list": [{
+      "text": "首页",
+      "pagePath": "pages/index",
+      "iconPath": "static/img/icon_home.png",
+      "selectedIconPath": "static/img/icon_home_active.png"
+    }, {
+      "text": "订单",
+      "pagePath": "pages/shopcart",
+      "iconPath": "static/img/icon_shop_cart.png",
+      "selectedIconPath": "static/img/icon_shop_cart_active.png"
+    }, {
+      "text": "我的",
+      "pagePath": "pages/info",
+      "iconPath": "static/img/icon_info.png",
+      "selectedIconPath": "static/img/icon_info_active.png"
+    }],
+    "position": "bottom"
+  }
+}
