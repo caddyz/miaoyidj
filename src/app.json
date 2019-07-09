@@ -3,11 +3,17 @@
     "pages/index",
     "pages/counter",
     "pages/info",
-    "pages/shopcart",
-    {
-      "path": "packageA/logs",
-      "subPackage": true
-    }
+    "pages/order",
+    "pages/details",
+    "pages/confirm",
+    "pages/order",
+    "pages/orderDetail",
+    "pages/pay",
+    "pages/placeOrder",
+    "pages/member",
+    "pages/coupon",
+    "pages/address",
+    "pages/addressEditor"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -28,7 +34,7 @@
       "selectedIconPath": "static/img/icon_home_active.png"
     }, {
       "text": "订单",
-      "pagePath": "pages/shopcart",
+      "pagePath": "pages/order",
       "iconPath": "static/img/icon_shop_cart.png",
       "selectedIconPath": "static/img/icon_shop_cart_active.png"
     }, {
