@@ -62,6 +62,7 @@ export default {
     width: 100%;
     font-size: 11pt;
     color: #888888;
+    word-break: break-word;
   }
   .content_price {
     height: 30%;

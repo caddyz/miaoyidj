@@ -29,7 +29,7 @@
       </div>
       <div class="tit-ti">热门服务</div>
       <div class="hot">
-        <div class="hot-con">1</div>
+        <div class="hot-con" @click="goDetails">1</div>
         <div style="width: 10%"></div>
         <div class="hot-con">2</div>
       </div>
@@ -38,6 +38,7 @@
       <div class="tit">推荐服务</div>
       <card :info="info"/>
       <card :info="info"/>
+      <mytitle/>
     </div>
   </div>
 </template>
@@ -201,6 +202,10 @@ export default {
     },
     indexRouter (e) {
       console.log('获取到的id：', e.currentTarget.dataset.index)
+    },
+    goDetails () {
+      const url = '/pages/placeOrder'
+      this.$router.push(url)
     }
   }
 }

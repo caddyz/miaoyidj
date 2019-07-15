@@ -5,47 +5,108 @@
     </div>
     <div class="details-i">
       <div class="details-info">
-
+        <div class="details-info-title">这是标题</div>
+        <div class="details-info-price">￥&nbsp;123元&nbsp;&nbsp;&nbsp;&nbsp;
+          <i-tag
+            class="i-tags"
+            name="单个标签"
+            color="red">
+            一口价
+          </i-tag>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <i-tag
+            class="i-tags"
+            name="单个标签"
+            color="yellow">
+            上门服务
+          </i-tag>
+        </div>
+        <div class="details-info-remark">项目简介：这是简介</div>
+        <div class="details-info-review">好评率100%</div>
+      </div>
+    </div>
+    <div style="height: 15rpx;background-color: whitesmoke"></div>
+    <mytitle :title="title1"/>
+    <div class="estimate">
+      <review/>
+    </div>
+    <div class="more-estimate">
+      <button class="more-estimate-button" @click="moreReview">查看更多</button>
+    </div>
+    <div style="height: 15rpx;background-color: whitesmoke"></div>
+    <mytitle :title="title2"/>
+    <div class="estimate">
+      <div class="estimate-content">
+        下单时请注意查看地址是否正确，并仔细填写手机号，支付前请详细核对订单信息。
+        手机注意保持电话通畅，请注意不要遗漏技师来电，如果因为手机号无效所产生的
+        服务未完成，概不负责。
+      </div>
+    </div>
+    <div style="height: 15rpx;background-color: whitesmoke"></div>
+    <mytitle :title="title3"/>
+    <div class="service-info">
+      <div class="service-info-content">
+        122元这是标题
       </div>
     </div>
     <div class="foot">
-      <div class="foot-icon" @click="callMerchant">
+      <button class="foot-icon" @click="callMerchant">
         <div class="foot-icon-img">
           <i-icon type="mobilephone" size="32"/>
         </div>
-        <div class="foot-icon-text">联系商家</div>
-      </div>
+        <div class="foot-icon-text">热线</div>
+      </button>
       <button class="foot-icon" open-type="share">
         <div class="foot-icon-img">
           <i-icon type="share" size="32"/>
         </div>
         <div class="foot-icon-text">分享</div>
       </button>
+      <!---->
       <div class="foot-button">
-        <div class="foot-button-in">
-          立即预约
-        </div>
+        <div style="height: 10%"></div>
+        <i-button class="foot-button" @click="placeOrder" type="error" long="true">立即预约</i-button>
       </div>
+      <div style="width: 5%;background-color: white;height: 100%"></div>
     </div>
   </div>
 </template>
 <script>
+  import mytitle from '@/components/mytitle'
+  import review from '@/components/review'
   export default {
     config: {
       usingComponents: {
         'i-icon': '../../static/iview/icon/index',
-        'i-button': '../../static/iview/button/index'
+        'i-tag': '../../static/iview/tag/index',
+        'i-avatar': '../../static/iview/avatar/index',
+        'i-button': '../../static/iview/button/index',
+        'i-rate': '../../static/iview/rate/index'
       }
     },
-    data () {},
+    components: {
+      mytitle,
+      review
+    },
+    data () {
+      return {
+        title1: '用户评价',
+        title2: '温馨提示',
+        title3: '服务详情'
+      }
+    },
     methods: {
       callMerchant () {
         wx.makePhoneCall({
           phoneNumber: '1340000' // 仅为示例，并非真实的电话号码
         })
       },
-      sharePage () {
-
+      placeOrder () {
+        const url = '/pages/placeOrder'
+        this.$router.push(url)
+      },
+      moreReview () {
+        console.log('查看更多评价')
       }
     }
   }
@@ -56,14 +117,38 @@
     margin-bottom: 15rpx;
   }
   .details-info {
-    height: 195rpx;
+    height: 265rpx;
     width: 95%;
     margin-top: 15rpx;
-    background-color: aqua;
   }
   .details-i {
     display: flex;
     justify-content: center;
+  }
+  .details-info-title,.details-info-review,.details-info-price,.details-info-remark {
+    display: flex;
+    align-items: center;
+    height: 45rpx;
+    width: 100%;
+    margin-bottom: 25rpx;
+  }
+  .details-info-title {
+    font-size: 17pt;
+    color: #353535;
+  }
+  .details-info-review {
+    font-size: 9pt;
+    color: #888;
+    justify-content: flex-end;
+  }
+  .details-info-remark {
+    font-size: 11pt;
+    color: #888;
+    flex-wrap: wrap;
+  }
+  .details-info-price {
+    font-size: 14pt;
+    color: red;
   }
   .foot {
     height: 125rpx;
@@ -71,7 +156,7 @@
     left: 0;
     bottom: 5rpx;
     width: 100%;
-    /*z-index: 9999;*/
+    z-index: 9999;
     border-top: 1px solid lightgrey;
     display: flex;
     flex-direction: row;
@@ -98,20 +183,9 @@
     align-items: center;
   }
   .foot-button {
-    width: 60%;
+    width: 55%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .foot-button-in {
-    height: 75%;
-    width: 75%;
-    background-color: #FF3300;
-    opacity: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: white;
   }
   button::after {
     border: none;
@@ -119,5 +193,41 @@
   button {
     background-color: #fff;
     border-radius:0;
+  }
+  .estimate,.service-info {
+    display: flex;
+    justify-content: center;
+  }
+  .estimate-content {
+    width: 90%;
+    font-size: 11pt;
+    color: #888;
+    text-indent: 2em;
+    margin-bottom: 25rpx;
+  }
+  .more-estimate {
+    margin-top: 25rpx;
+    height: 75rpx;
+    display: flex;
+    justify-content: center;
+  }
+  .more-estimate-button {
+    width: 30%;
+    height: 90%;
+    font-size: 11pt;
+    color: red;
+    border: 1px solid red;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .service-info {
+    padding-bottom: 155rpx;
+  }
+  .service-info-content {
+    width: 90%;
+    font-size: 12pt;
+    color: #353535;
   }
 </style>
