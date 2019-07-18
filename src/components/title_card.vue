@@ -31,6 +31,12 @@
     },
     methods: {
       goSkip () {
+        if (this.url === 'phone') {
+          wx.makePhoneCall({
+            phoneNumber: '1340000' // 仅为示例，并非真实的电话号码
+          })
+          return
+        }
         if (!(this.url === undefined)) {
           this.$router.push(this.url)
         }
@@ -44,6 +50,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5rpx;
   }
   .address-card-back {
     display: flex;

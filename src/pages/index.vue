@@ -163,11 +163,24 @@ export default {
       'i-icon': '../../static/iview/icon/index'
     }
   },
+  mounted () {
+    this.$http.get('user/getUserInfo', {
+      id: 1
+    }).then(function (res) {
+      console.log('结果：', res)
+    }).catch(function (err) {
+      console.log('结果：', err)
+    })
+    this.$http.get('product/getAllProduct').then(function (res) {
+      console.log('所以商品', res)
+    }).catch(function (err) {
+      console.log('错误：', err)
+    })
+  },
   data () {
     return {
       city: '成都',
       pa: te,
-      motto: 'Hello World',
       userInfo: {},
       images: [
         {

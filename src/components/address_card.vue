@@ -36,8 +36,7 @@
     },
     methods: {
       chooseAddress () {
-        const url = '/pages/address'
-        this.$router.push(url)
+        this.$router.push({path: '/pages/address', query: {id: 1}})
       }
     }
   }

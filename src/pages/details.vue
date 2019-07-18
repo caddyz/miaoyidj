@@ -46,19 +46,19 @@
     <mytitle :title="title3"/>
     <div class="service-info">
       <div class="service-info-content">
-        122元这是标题
+        这是标题/122元
       </div>
     </div>
     <div class="foot">
       <button class="foot-icon" @click="callMerchant">
         <div class="foot-icon-img">
-          <i-icon type="mobilephone" size="32"/>
+          <i-icon type="mobilephone" size="32" color="#FF9912"/>
         </div>
         <div class="foot-icon-text">热线</div>
       </button>
       <button class="foot-icon" open-type="share">
         <div class="foot-icon-img">
-          <i-icon type="share" size="32"/>
+          <i-icon type="share" size="32" color="#FF9912"/>
         </div>
         <div class="foot-icon-text">分享</div>
       </button>

@@ -11,11 +11,17 @@
               <div style="width: 90%;height: 100%;">
                 <div class="na-name">kaiserZ</div>
                 <div class="na-tag">
-                  <i-tag
+                  <i-tag v-if="memberTrue"
                     class="i-tags"
                     name="单个标签"
                     color="yellow">
                     会员
+                  </i-tag>
+                  <i-tag v-else
+                         class="i-tags"
+                         name="单个标签"
+                         color="yellow">
+                    用户
                   </i-tag>
                 </div>
                 <div class="na-point">积分:12</div>
@@ -24,7 +30,7 @@
           </div>
         </div>
         <div class="info-top-content-co">
-          <button class="get-points">获取积分</button>
+          <button class="get-points" @click="getPoints">获取积分</button>
         </div>
       </div>
     </div>
@@ -39,23 +45,32 @@
         <titlecard :tit="t3" :url="t3url">
           <i class="iconfont icon-dizhi"></i>
         </titlecard>
+        <buttoncard :tit="t4" :openType="openTypeVal">
+          <i class="iconfont icon-huabankafu"></i>
+        </buttoncard>
+        <titlecard :tit="t5" :url="t5Val">
+          <i class="iconfont icon-rexian"></i>
+        </titlecard>
       </div>
     </div>
   </div>
 </template>
 <script>
   import titlecard from '@/components/title_card'
+  import buttoncard from '@/components/button_card'
 
   export default {
     config: {
       navigationBarTitleText: '我的',
       usingComponents: {
         'i-tag': '../../static/iview/tag/index',
+        'i-icon': '../../static/iview/icon/index',
         'i-button': '../../static/iview/button/index'
       }
     },
     components: {
-      titlecard
+      titlecard,
+      buttoncard
     },
     data () {
       return {
@@ -66,15 +81,21 @@
         t3: '我的地址',
         t3url: '/pages/address',
         t4: '妙伊客服',
-        t4url: '/pages/member',
         t5: '妙伊热线',
-        t5url: '/pages/member'
+        t5Val: 'phone',
+        openTypeVal: 'contact',
+        memberTrue: false
+      }
+    },
+    methods: {
+      getPoints () {
+        const url = '/pages/member'
+        this.$router.push(url)
       }
     }
   }
 </script>
 <style lang="less" scoped>
-  //at.alicdn.com/t/font_1294690_z0g176xcz5l.css
   @import "../../static/assets/iconfont.css";
   .info-top {
     height: 305rpx;
@@ -143,8 +164,8 @@
     width: 60%;
     height: 30%;
     font-size: 25rpx;
-    color: red;
-    border: 1px solid red;
+    color: #ed3f14;
+    border: 1px solid #ed3f14;
     border-radius: 30px;
     display: flex;
     justify-content: center;

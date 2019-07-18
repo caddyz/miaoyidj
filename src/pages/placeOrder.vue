@@ -39,9 +39,7 @@
         <i-button  @click="goPay" type="error" long="true">去支付</i-button>
       </div>
     </div>
-    <i-modal title="支付" :visible="visible" :actions="actions" @click="handleClick3">
-      <div>请选择支付方式</div>
-    </i-modal>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
@@ -49,8 +47,8 @@
   import titlecard from '@/components/title_card'
   import ordercard from '@/components/order_card'
   import {getDeList} from '@/utils/index'
+  import Dialog from '../../static/vant/dialog/dialog'
 
-  const { $Message } = require('../../static/iview/base/index')
   let f = length => Array.from({length}, (v, k) => k)
   export default {
     config: {
@@ -59,9 +57,10 @@
         'i-icon': '../../static/iview/icon/index',
         'i-tag': '../../static/iview/tag/index',
         'i-input': '../../static/iview/input/index',
-        'i-modal': '../../static/iview/modal/index',
-        'i-message': '../../static/iview/message/index',
-        'i-button': '../../static/iview/button/index'
+        'i-button': '../../static/iview/button/index',
+        'van-dialog': '../../static/vant/dialog/index',
+        'van-popup': '../../static/vant/popup/index',
+        'van-button': '../../static/vant/button/index'
       }
     },
     components: {
@@ -81,21 +80,7 @@
         couponTit: '我的优惠',
         memberTit: '我的会员',
         couponUrl: '/pages/coupon',
-        memberUrl: '/pages/member',
-        visible: false,
-        actions: [
-          {
-            name: '现金支付',
-            color: '#2d8cf0'
-          },
-          {
-            name: '微信支付',
-            color: '#19be6b'
-          },
-          {
-            name: '取消'
-          }
-        ]
+        memberUrl: '/pages/member'
       }
     },
     methods: {
@@ -107,7 +92,14 @@
         return [timeli, f(24)]
       },
       goPay () {
-        this.visible = true
+        Dialog.confirm({
+          title: '支付',
+          message: '立即支付'
+        }).then(() => {
+          console.log('123')
+        }).catch(() => {
+          console.log(365)
+        })
       },
       bindMultiPickerChange (e) {
         console.log('picker发送选择改变，携带值为', e.mp.detail.value)
@@ -115,20 +107,6 @@
       },
       bindMultiPickerColumnChange (e) {
         console.log('修改的列为', e.mp.detail.column, '，值为', e.mp.detail.value)
-      },
-      handleClick3 (event) {
-        const index = event.detail
-        console.log('index:', index)
-        if (index === 0) {
-          $Message({
-            content: '点击了现金支付'
-          })
-        } else if (index === 1) {
-          $Message({
-            content: '点击了微信支付'
-          })
-        }
-        this.visible = false
       }
     }
   }
@@ -138,7 +116,7 @@
     height: 125rpx;
     position: fixed;
     left: 0;
-    bottom: 5rpx;
+    bottom: 0;
     width: 100%;
     z-index: 9999;
     display: flex;
