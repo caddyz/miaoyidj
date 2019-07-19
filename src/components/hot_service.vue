@@ -34,12 +34,12 @@
     },
     components: {
       itemcommon
-    },
-    watch: {
-      product: function (val, oldVal) {
-        this.pageNum = parseInt(val.length()) / 8 + 1
-      }
     }
+    // watch: {
+    //   product: function (val, oldVal) {
+    //     this.pageNum = parseInt(val.length()) / 8 + 1
+    //   }
+    // }
   }
 </script>
 <style scoped>

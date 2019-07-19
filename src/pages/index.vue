@@ -6,7 +6,7 @@
           <i-icon size="18" type="coordinates"/>
           <div @click="changeCity">{{city}}</div>
         </div>
-        <div class="top_font">妙伊到家为您服务</div>
+        <div class="top_font">妙尚佳为您服务</div>
       </div>
       <myswiper :images="images"/>
       <div class="nav_list">
@@ -33,7 +33,7 @@
         <div style="width: 10%"></div>
         <div class="hot-con">2</div>
       </div>
-      <div class="tit-ti">妙伊上门服务</div>
+      <div class="tit-ti">妙尚佳上门服务</div>
       <hotservice :product="pa"/>
       <div class="tit">推荐服务</div>
       <card :info="info"/>
@@ -47,114 +47,7 @@
 import card from '@/components/card'
 import myswiper from '@/components/my_swiper'
 import hotservice from '@/components/hot_service'
-
-let te = [
-  {
-    id: 1,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 2,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 3,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 4,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 5,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 6,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 7,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 8,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 9,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 10,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 11,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 12,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 13,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 14,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 15,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 16,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 17,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 18,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 19,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 20,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  },
-  {
-    id: 21,
-    img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-    title: '129元上门按摩'
-  }
-]
+import api from '@/api/index'
 
 export default {
   mpType: 'page',
@@ -164,23 +57,12 @@ export default {
     }
   },
   mounted () {
-    this.$http.get('user/getUserInfo', {
-      id: 1
-    }).then(function (res) {
-      console.log('结果：', res)
-    }).catch(function (err) {
-      console.log('结果：', err)
-    })
-    this.$http.get('product/getAllProduct').then(function (res) {
-      console.log('所以商品', res)
-    }).catch(function (err) {
-      console.log('错误：', err)
-    })
+    this.getData()
   },
   data () {
     return {
       city: '成都',
-      pa: te,
+      pa: [],
       userInfo: {},
       images: [
         {
@@ -219,6 +101,10 @@ export default {
     goDetails () {
       const url = '/pages/placeOrder'
       this.$router.push(url)
+    },
+    async getData () {
+      const res = await api.getIndexData()
+      this.pa = res.data
     }
   }
 }
