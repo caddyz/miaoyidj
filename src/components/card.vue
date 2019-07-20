@@ -1,17 +1,19 @@
 <template>
-  <div class="contain" @click="goInfo">
+  <div class="contain" @click="goInfo(info)">
     <div class="imgg">
-      <img style="width: 100%;height: 100%;border-radius: 10px" :src="info.img" alt=""/>
+      <img style="width: 100%;height: 100%;border-radius: 10px" :src="info.pcover" mode="aspectFill" alt=""/>
     </div>
     <div style="width: 5%"></div>
     <div class="content">
-      <div class="content_ti">{{info.title}}</div>
-      <div class="content_info">{{info.remark}}</div>
+      <div class="content_ti">{{info.pname}}</div>
+      <div class="content_info">{{info.pintroInfo}}</div>
       <div class="content_price">
         <div class="pri">
-          <span style="font-size: 46rpx">{{info.price}}</span>
+          <span style="align-self: flex-end">￥</span>
+          <span style="font-size: 40rpx;">{{info.pprice}}</span>
           <span style="align-self: flex-end">元</span>
         </div>
+        <div class="po">{{info.poriginalPrice}}元</div>
         <div class="com">好评率99%</div>
       </div>
     </div>
@@ -26,8 +28,9 @@ export default {
     }
   },
   methods: {
-    goInfo () {
-      console.log('sss')
+    goInfo (info) {
+      console.log('info:', info)
+      this.$router.push({path: '/pages/details', query: {item: info}})
     }
   }
 }
@@ -37,7 +40,7 @@ export default {
   .contain {
     margin-top: 10rpx;
     margin-bottom: 30rpx;
-    height: 275rpx;
+    height: 265rpx;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -51,18 +54,22 @@ export default {
     width: 65%;
     height: 100%;
   }
+  .content_ti,.content_info{
+    width: 100%;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow:hidden;
+  }
   .content_ti {
     height: 20%;
-    width: 100%;
-    font-size: 14pt;
+    font-size: 38rpx;
     font-weight: 500;
+    white-space: nowrap;
   }
   .content_info {
     height: 50%;
-    width: 100%;
-    font-size: 11pt;
+    font-size: 30rpx;
     color: #888888;
-    word-break: break-word;
   }
   .content_price {
     height: 30%;
@@ -71,16 +78,19 @@ export default {
     flex-direction: row;
     justify-content: space-between;
   }
-  .pri,.com {
+  .pri,.po,.com {
     display: flex;
     align-self: flex-end;
+    font-size: 26rpx;
   }
   .pri {
     color: red;
-    font-size: 11pt;
+  }
+  .po {
+    color: red;
+    text-decoration: line-through;
   }
   .com {
     color: #888888;
-    font-size: 11pt;
   }
 </style>

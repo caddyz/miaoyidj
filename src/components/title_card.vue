@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+  import { mapState } from 'vuex'
   export default {
     props: {
       tit: {
@@ -29,11 +30,16 @@
         type: String
       }
     },
+    computed: {
+      ...mapState([
+        'phone'
+      ])
+    },
     methods: {
       goSkip () {
         if (this.url === 'phone') {
           wx.makePhoneCall({
-            phoneNumber: '1340000' // 仅为示例，并非真实的电话号码
+            phoneNumber: this.$store.state.phone // 仅为示例，并非真实的电话号码
           })
           return
         }

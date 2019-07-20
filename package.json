@@ -15,6 +15,7 @@
     "minapp-api-promise": "^1.0.2",
     "mpvue": "^2.0.0",
     "mpvue-router-patch": "^2.0.0",
+    "mpvue-wxparse": "^0.6.5",
     "vuex": "^3.0.0"
   },
   "devDependencies": {

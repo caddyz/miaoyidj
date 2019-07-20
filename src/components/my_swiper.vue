@@ -2,7 +2,7 @@
   <swiper class="sw" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration" :current="swiperCurrent" @change="swiperChange($event)">
     <block v-for="(item, index) in images" :key="index">
       <swiper-item>
-        <image :src="item.url" class="slide-image" mode="aspectFill" @click="swipclick"></image>
+        <image :src="item.pcover" class="slide-image" mode="aspectFill" @click="swipclick"></image>
       </swiper-item>
     </block>
   </swiper>
@@ -31,10 +31,8 @@
         this.swiperCurrent = e.mp.detail.current
       },
       swipclick () {
-        console.log('当前下标：', this.swiperCurrent)
-        console.log('获取当前uri：', this.images[this.swiperCurrent].url)
-        const url = '/pages/details'
-        this.$router.push(url)
+        console.log('获取当前对象信息：', this.images[this.swiperCurrent])
+        this.$router.push({path: '/pages/details', query: {item: JSON.stringify(this.images[this.swiperCurrent])}})
       }
     }
   }

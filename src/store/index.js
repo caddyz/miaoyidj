@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0
+    phone: '18116585239'
   },
   mutations: {
     increment: (state) => {

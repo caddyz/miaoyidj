@@ -29,16 +29,16 @@
       </div>
       <div class="tit-ti">热门服务</div>
       <div class="hot">
-        <div class="hot-con" @click="goDetails">1</div>
-        <div style="width: 10%"></div>
-        <div class="hot-con">2</div>
+        <div v-for="(item,index) in hotInfo" :key="index" class="hot-con" @click="goDetails(item)">
+          <img style="width: 100%;height: 100%" mode="aspectFill" :src="item.pcover" alt=""/>
+        </div>
       </div>
       <div class="tit-ti">妙尚佳上门服务</div>
-      <hotservice :product="pa"/>
+      <div class="contro">
+        <listcard v-for="(item,index) in pa" :key="index" :item="item"></listcard>
+      </div>
       <div class="tit">推荐服务</div>
-      <card :info="info"/>
-      <card :info="info"/>
-      <mytitle/>
+      <card v-for="(item,index) in info" :key="index" :info="item"/>
     </div>
   </div>
 </template>
@@ -46,7 +46,7 @@
 <script>
 import card from '@/components/card'
 import myswiper from '@/components/my_swiper'
-import hotservice from '@/components/hot_service'
+import listcard from '@/components/list_card'
 import api from '@/api/index'
 
 export default {
@@ -56,39 +56,26 @@ export default {
       'i-icon': '../../static/iview/icon/index'
     }
   },
-  mounted () {
-    this.getData()
+  async mounted () {
+    await Promise.all([
+      this.getData()
+    ])
   },
   data () {
     return {
       city: '成都',
       pa: [],
       userInfo: {},
-      images: [
-        {
-          page: '1',
-          url:
-            'https://img-oss.yunshanmeicai.com/goods/default/31d8dfa4-0d7b-4694-80f9-41b07c9d0a3a.png'
-        },
-        {
-          page: '2',
-          url:
-            'https://img-oss.yunshanmeicai.com/goods/default/e83c8f0f-4acc-4729-bcbb-294f2b314977.jpg'
-        }
-      ],
-      info: {
-        img: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-        title: '豪华大保健快来啊啊啊啊啊',
-        remark: '这是大保健',
-        price: 120
-      }
+      images: [],
+      hotInfo: [],
+      info: []
     }
   },
 
   components: {
     card,
     myswiper,
-    hotservice
+    listcard
   },
 
   methods: {
@@ -98,13 +85,26 @@ export default {
     indexRouter (e) {
       console.log('获取到的id：', e.currentTarget.dataset.index)
     },
-    goDetails () {
-      const url = '/pages/placeOrder'
-      this.$router.push(url)
+    goDetails (item) {
+      this.$router.push({path: '/pages/details', query: {item: JSON.stringify(item)}})
     },
     async getData () {
-      const res = await api.getIndexData()
+      const res = await api.getAllProduct()
       this.pa = res.data
+      const r = await api.getClassifyData()
+      for (let i in r.data) {
+        switch (r.data[i].istatus) {
+          case 1:
+            this.images.push(r.data[i].product)
+            break
+          case 2:
+            this.hotInfo.push(r.data[i].product)
+            break
+          case 3:
+            this.info.push(r.data[i].product)
+            break
+        }
+      }
     }
   }
 }
@@ -165,7 +165,7 @@ export default {
   .hot {
     height: 195rpx;
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
   }
   .hot-con {
     height: 100%;
@@ -194,5 +194,10 @@ export default {
       text-align: center;
       font-weight: 300;
     }
+  }
+  .contro {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 </style>

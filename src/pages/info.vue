@@ -80,8 +80,8 @@
         t2url: '/pages/coupon',
         t3: '我的地址',
         t3url: '/pages/address',
-        t4: '妙伊客服',
-        t5: '妙伊热线',
+        t4: '妙尚佳客服',
+        t5: '妙尚佳热线',
         t5Val: 'phone',
         openTypeVal: 'contact',
         memberTrue: false

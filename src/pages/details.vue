@@ -34,6 +34,9 @@
       <button class="more-estimate-button" @click="moreReview">查看更多</button>
     </div>
     <div style="height: 15rpx;background-color: whitesmoke"></div>
+    <mytitle :title="title4"/>
+    <wx-parse :content="productHtmlImg"/>
+    <div style="height: 15rpx;background-color: whitesmoke"></div>
     <mytitle :title="title2"/>
     <div class="estimate">
       <div class="estimate-content">
@@ -74,6 +77,9 @@
 <script>
   import mytitle from '@/components/mytitle'
   import review from '@/components/review'
+  import { mapState } from 'vuex'
+  import wxParse from 'mpvue-wxparse'
+  import api from '@/api/index'
   export default {
     config: {
       usingComponents: {
@@ -84,21 +90,37 @@
         'i-rate': '../../static/iview/rate/index'
       }
     },
+    computed: {
+      ...mapState([
+        'phone'
+      ])
+    },
     components: {
       mytitle,
-      review
+      review,
+      wxParse
+    },
+    mounted () {
+      console.log('res：', this.$route.query.item)
+      this.getListImage(1)
+      // await Promise.all([
+      //   this.getListImage(1)
+      // ])
     },
     data () {
       return {
         title1: '用户评价',
         title2: '温馨提示',
-        title3: '服务详情'
+        title3: '服务详情',
+        title4: '项目详情',
+        productHtmlImg: '',
+        productItem: ''
       }
     },
     methods: {
       callMerchant () {
         wx.makePhoneCall({
-          phoneNumber: '1340000' // 仅为示例，并非真实的电话号码
+          phoneNumber: this.$store.state.phone
         })
       },
       placeOrder () {
@@ -107,11 +129,16 @@
       },
       moreReview () {
         console.log('查看更多评价')
+      },
+      async getListImage (id) {
+        const res = await api.getHtmlCode(id)
+        this.productHtmlImg = res.data
       }
     }
   }
 </script>
 <style scoped>
+  @import url("~mpvue-wxparse/src/wxParse.css");
   .details-img {
     height: 395rpx;
     margin-bottom: 15rpx;
