@@ -5,13 +5,13 @@
         <div class="info-top-content-tx">
           <div class="touxiang">
             <div class="tupian">
-              <img style="width: 90%;height: 90%;border-radius: 50px" src="https://i.loli.net/2017/08/21/599a521472424.jpg"/>
+              <img style="width: 90%;height: 90%;border-radius: 50px" :src="miaoyiUser.uavatar"/>
             </div>
             <div class="na">
               <div style="width: 90%;height: 100%;">
-                <div class="na-name">kaiserZ</div>
+                <div class="na-name">{{miaoyiUser.uname}}</div>
                 <div class="na-tag">
-                  <i-tag v-if="memberTrue"
+                  <i-tag v-if="miaoyiUser.ustatus"
                     class="i-tags"
                     name="单个标签"
                     color="yellow">
@@ -24,7 +24,7 @@
                     用户
                   </i-tag>
                 </div>
-                <div class="na-point">积分:12</div>
+                <div class="na-point">积分:{{miaoyiUser.upoints}}</div>
               </div>
             </div>
           </div>
@@ -48,25 +48,49 @@
         <buttoncard :tit="t4" :openType="openTypeVal">
           <i class="iconfont icon-huabankafu"></i>
         </buttoncard>
-        <titlecard :tit="t5" :url="t5Val">
-          <i class="iconfont icon-rexian"></i>
-        </titlecard>
+        <div class="address-card" @click="callPhone">
+          <div class="address-card-back">
+            <div class="address-card-icon">
+              <i class="iconfont icon-rexian"></i>
+            </div>
+            <div class="address-text-else">
+              妙尚佳热线
+            </div>
+            <div class="address-text-show">
+            </div>
+            <div class="address-card-bottom-icon">
+              <i-icon type="enter" size="20" color="lightgrey"/>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
   import titlecard from '@/components/title_card'
   import buttoncard from '@/components/button_card'
-
+  import { mapState, mapMutations } from 'vuex'
+  import Dialog from '../../static/vant/dialog/dialog'
   export default {
     config: {
       navigationBarTitleText: '我的',
       usingComponents: {
         'i-tag': '../../static/iview/tag/index',
         'i-icon': '../../static/iview/icon/index',
-        'i-button': '../../static/iview/button/index'
+        'i-button': '../../static/iview/button/index',
+        'van-dialog': '../../static/vant/dialog/index',
+        'van-popup': '../../static/vant/popup/index',
+        'van-button': '../../static/vant/button/index'
       }
+    },
+    computed: {
+      ...mapState([
+        'openid',
+        'miaoyiUser',
+        'phone'
+      ])
     },
     components: {
       titlecard,
@@ -77,20 +101,33 @@
         t1: '我的会员',
         t1url: '/pages/member',
         t2: '我的优惠',
-        t2url: '/pages/coupon',
+        t2url: '/pages/coupon?isInfo=true',
         t3: '我的地址',
         t3url: '/pages/address',
         t4: '妙尚佳客服',
-        t5: '妙尚佳热线',
-        t5Val: 'phone',
         openTypeVal: 'contact',
-        memberTrue: false
+        userInfo: {}
       }
     },
+    mounted () {
+    },
     methods: {
+      ...mapMutations([
+        'saveMiaoyiUser'
+      ]),
       getPoints () {
         const url = '/pages/member'
         this.$router.push(url)
+      },
+      callPhone () {
+        Dialog.confirm({
+          message: '是否拨打电话'
+        }).then(() => {
+          wx.makePhoneCall({
+            phoneNumber: this.$store.state.phone
+          })
+        }).catch(() => {
+        })
       }
     }
   }
@@ -178,5 +215,46 @@
   }
   .info-bottom-content {
     width: 93%;
+  }
+  .address-card {
+    height: 106rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5rpx;
+  }
+  .address-card-back {
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    height: 100%;
+    border-bottom: 1px solid whitesmoke;
+  }
+  .address-text-else {
+    width: 33%;
+    color: #888;
+  }
+  .address-text-show,.address-text-else {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 13pt;
+  }
+  .address-text-show {
+    width: 50%;
+    color: red;
+    justify-content: flex-end;
+  }
+  .address-card-icon {
+    width: 7%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .address-card-bottom-icon {
+    width: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 </style>

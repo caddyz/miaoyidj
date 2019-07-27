@@ -21,19 +21,23 @@
 </template>
 
 <script>
-export default {
-  props: {
-    info: {
-      type: Object
-    }
-  },
-  methods: {
-    goInfo (info) {
-      console.log('info:', info)
-      this.$router.push({path: '/pages/details', query: {item: info}})
+  import { mapMutations } from 'vuex'
+  export default {
+    props: {
+      info: {
+        type: Object
+      }
+    },
+    methods: {
+      ...mapMutations([
+        'saveProductInfo'
+      ]),
+      goInfo (info) {
+        this.saveProductInfo(info)
+        this.$router.push({path: '/pages/details'})
+      }
     }
   }
-}
 </script>
 
 <style scoped>

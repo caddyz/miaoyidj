@@ -2,18 +2,18 @@
   <div class="review-info">
     <div class="review-info-name">
       <div class="review-info-avatar">
-        <i-avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" size="large" shape="circle"></i-avatar>
+        <i-avatar :src="review.user.uavatar" size="large" shape="circle"></i-avatar>
       </div>
       <div class="review-info-rate">
-        <div class="rate-name">姓名</div>
+        <div class="rate-name">{{review.user.uname}}</div>
           <i-rate
             :disabled="dis"
-            :value="starIndex">
+            :value="review.rrate">
           </i-rate>
       </div>
-      <div class="review-info-time">{{rateTime}}</div>
+      <div class="review-info-time">{{review.rreviewTime}}</div>
     </div>
-    <div class="review-content">asdasdas啊沙发沙发啊十大算法</div>
+    <div class="review-content">{{review.rcontent}}</div>
   </div>
 </template>
 <script>
@@ -21,7 +21,7 @@
     data () {
       return {
         dis: true,
-        starIndex: 4,
+        starIndex: 5,
         rateTime: '2019.07.02 19:35:35'
       }
     },

@@ -9,6 +9,7 @@
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
   export default {
     props: {
       images: {
@@ -26,13 +27,16 @@
       }
     },
     methods: {
+      ...mapMutations([
+        'saveProductInfo'
+      ]),
       swiperChange (e) {
         // 改变下标
         this.swiperCurrent = e.mp.detail.current
       },
       swipclick () {
-        console.log('获取当前对象信息：', this.images[this.swiperCurrent])
-        this.$router.push({path: '/pages/details', query: {item: JSON.stringify(this.images[this.swiperCurrent])}})
+        this.saveProductInfo(this.images[this.swiperCurrent])
+        this.$router.push({path: '/pages/details'})
       }
     }
   }

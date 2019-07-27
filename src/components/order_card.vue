@@ -2,11 +2,11 @@
   <div class="order-card">
     <div class="order-content">
       <div class="order-card-img">
-        <img style="height: 100%;width: 100%" src="https://i.loli.net/2017/08/21/599a521472424.jpg" alt=""/>
+        <img style="height: 100%;width: 100%" :src="orderObj.pcover" alt=""/>
       </div>
       <div style="width: 5%;height: 100%"></div>
       <div class="order-card-content">
-        <div class="order-card-content-title">标题</div>
+        <div class="order-card-content-title">{{orderObj.pname}}</div>
         <div class="order-card-content-tag">
           <i-tag
             class="i-tags"
@@ -15,7 +15,7 @@
             上门服务
           </i-tag>
         </div>
-        <div class="order-card-content-price">￥&nbsp;123</div>
+        <div class="order-card-content-price">￥&nbsp;{{orderObj.pprice}}</div>
       </div>
       <div class="order-card-num">
         x&nbsp;1
@@ -24,7 +24,13 @@
   </div>
 </template>
 <script>
-  export default {}
+  export default {
+    props: {
+      orderObj: {
+        type: Object
+      }
+    }
+  }
 </script>
 <style scoped>
   .order-card {

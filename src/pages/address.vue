@@ -1,19 +1,29 @@
 <template>
   <div>
-    <div v-if="hrBoo">
-      <addressitem :showBo="hrBoo"/>
+    <div v-if="addressList.length > 0">
+      <div v-if="hrBoo">
+        <div v-for="(item,index) in addressList" :key="index" @click="chooseAddress(index)">
+          <addressitem :showBo="hrBoo" :addressItem="item"/>
+        </div>
+      </div>
+      <div v-else>
+        <addressitem v-for="(item,index) in addressList" :key="index" :addressItem="item"/>
+      </div>
     </div>
     <div v-else>
-      <addressitem/>
-      <addressitem/>
+      <div class="nothing">
+        您还没有添加地址
+      </div>
     </div>
     <div class="foo">
-      <i-button @click="addAddress" type="success" long="true">添加新地址</i-button>
+      <i-button @click="goAddAddress" type="success" long="true">添加新地址</i-button>
     </div>
   </div>
 </template>
 <script>
   import addressitem from '@/components/address_item'
+  import { mapState, mapMutations } from 'vuex'
+  import api from '@/api/index'
   export default {
     config: {
       navigationBarTitleText: '地址管理',
@@ -22,28 +32,44 @@
         'van-icon': '../../static/vant/icon/index'
       }
     },
+    computed: {
+      ...mapState([
+        'miaoyiUser'
+      ])
+    },
     components: {
       addressitem
     },
     data () {
       return {
-        hrBoo: ''
+        hrBoo: '',
+        addressList: []
       }
     },
     mounted () {
-      let i = this.$route.query.id
-      if (i === undefined) {
-        console.log('从我的页面过来的...')
-        this.hrBoo = false
-      }
-      if (i === '1') {
-        console.log('从购买过来的...')
-        this.hrBoo = true
-      }
+      this.getAddressList(this.$store.state.miaoyiUser.uid)
+      this.hrBoo = this.$route.query.id !== undefined
     },
     methods: {
-      addAddress () {
-        this.$router.push({path: '/pages/addressEditor'})
+      ...mapMutations([
+        'saveAddressInfo'
+      ]),
+      chooseAddress (index) {
+        this.saveAddressInfo(this.addressList[index])
+        this.$router.back(-1)
+      },
+      goAddAddress () {
+        this.$router.push({path: '/pages/addressEditor', query: {isAdd: true}})
+      },
+      async getAddressList (userId) {
+        const res = await api.getListAddress(userId)
+        if (res.code === 1) {
+          this.addressList = res.data
+          for (let i in this.addressList) {
+            this.addressList[i].color = ''
+          }
+          this.addressList[0].color = 'red'
+        }
       }
     }
   }
@@ -55,5 +81,14 @@
     left: 0;
     bottom: 0;
     width: 100%;
+  }
+  .nothing {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 13pt;
   }
 </style>

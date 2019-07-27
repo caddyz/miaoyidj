@@ -4,16 +4,16 @@
       <div class="address-card-icon" v-show="showVal">
         <i-icon size="18" type="coordinates"/>
       </div>
-      <div class="address-text" v-if="contro">
+      <div class="address-text-else">
+        服务地址
+      </div>
+      <div class="address-text">
         <div class="address-text-top">
-          爱睡觉的你
+          {{addressObj.aaddress}}
         </div>
         <div class="address-text-bottom">
-          阿斯弗
+          {{addressObj.aaddressDetail}}
         </div>
-      </div>
-      <div class="address-text-else" v-else>
-        选择地址
       </div>
       <div class="address-card-bottom-icon">
         <slot></slot>
@@ -26,12 +26,13 @@
     props: {
       showVal: {
         type: Boolean
+      },
+      addressObj: {
+        type: Object
       }
     },
     data () {
       return {
-        contro: false,
-        k: 'asda'
       }
     },
     methods: {
@@ -57,17 +58,19 @@
   }
   .address-text {
     margin-top: 10rpx;
-    width: 83%;
+    width: 50%;
     height: 100%;
   }
   .address-text-top,.address-text-bottom {
-   display: flex;
+    display: flex;
     align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 50%;
   }
   .address-text-top {
-    font-size: 14pt;
+    font-size: 13pt;
     color: #353535;
-    height: 50%;
   }
   .address-text-bottom {
     font-size: 11pt;
@@ -80,7 +83,7 @@
     height: 100%;
     font-size: 13pt;
     color: #888;
-    width: 83%;
+    width: 33%;
   }
   .address-card-icon {
     width: 7%;

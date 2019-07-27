@@ -9,6 +9,7 @@
   </div>
 </template>
 <script>
+  import { mapMutations } from 'vuex'
   export default {
     props: {
       item: {
@@ -16,8 +17,12 @@
       }
     },
     methods: {
+      ...mapMutations([
+        'saveProductInfo'
+      ]),
       goToDetails (item) {
-        this.$router.push({path: '/pages/details', query: {item: item}})
+        this.saveProductInfo(item)
+        this.$router.push({path: '/pages/details'})
       }
     }
   }

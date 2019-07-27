@@ -33,13 +33,19 @@
           <img style="width: 100%;height: 100%" mode="aspectFill" :src="item.pcover" alt=""/>
         </div>
       </div>
-      <div class="tit-ti">妙尚佳上门服务</div>
+      <div class="tit-ti">妙尚佳</div>
       <div class="contro">
         <listcard v-for="(item,index) in pa" :key="index" :item="item"></listcard>
       </div>
       <div class="tit">推荐服务</div>
       <card v-for="(item,index) in info" :key="index" :info="item"/>
     </div>
+    <!--<van-popup :show="show" @close="onClose">-->
+      <!--<div>-->
+        <!--<img class="popup-class" mode="aspectFill" src="https://miaoyidj-1253818867.cos.ap-chengdu.myqcloud.com/%E5%BC%B9%E5%87%BA/%E5%A6%99%E5%B0%9A%E4%BD%B3%E5%AE%A3%E4%BC%A0%E5%9B%BE800%E5%89%AF%E6%9C%AC.jpg" alt=""/>-->
+      <!--</div>-->
+    <!--</van-popup>-->
+    <van-toast id="van-toast" />
   </div>
 </template>
 
@@ -48,24 +54,37 @@ import card from '@/components/card'
 import myswiper from '@/components/my_swiper'
 import listcard from '@/components/list_card'
 import api from '@/api/index'
+import Details from './details'
+import { mapState, mapMutations } from 'vuex'
+import Toast from '../../static/vant/toast/toast'
 
 export default {
   mpType: 'page',
   config: {
     usingComponents: {
-      'i-icon': '../../static/iview/icon/index'
+      'i-icon': '../../static/iview/icon/index',
+      'van-popup': '../../static/vant/popup/index',
+      'van-toast': '../../static/vant/toast/index'
     }
+  },
+  computed: {
+    ...mapState([
+      'openid',
+      'test',
+      'userInfo'
+    ])
   },
   async mounted () {
     await Promise.all([
-      this.getData()
+      this.getData(),
+      this.userLogin()
     ])
   },
   data () {
     return {
       city: '成都',
       pa: [],
-      userInfo: {},
+      // show: true,
       images: [],
       hotInfo: [],
       info: []
@@ -73,12 +92,20 @@ export default {
   },
 
   components: {
+    Details,
     card,
     myswiper,
     listcard
   },
 
   methods: {
+    ...mapMutations([
+      'saveMiaoyiUser',
+      'saveProductInfo'
+    ]),
+    // onClose () {
+    //   this.show = false
+    // },
     changeCity () {
       console.log('111')
     },
@@ -86,7 +113,8 @@ export default {
       console.log('获取到的id：', e.currentTarget.dataset.index)
     },
     goDetails (item) {
-      this.$router.push({path: '/pages/details', query: {item: JSON.stringify(item)}})
+      this.saveProductInfo(item)
+      this.$router.push({path: '/pages/details'})
     },
     async getData () {
       const res = await api.getAllProduct()
@@ -104,6 +132,28 @@ export default {
             this.info.push(r.data[i].product)
             break
         }
+      }
+    },
+    async userLogin () {
+      const res = await api.getUserDetail(this.$store.state.openid)
+      console.log('结果', res)
+      if (res.code === 0) {
+        const re = await api.userRegister({
+          openid: this.$store.state.openid,
+          username: this.$store.state.userInfo.nickName,
+          avatar: this.$store.state.userInfo.avatarUrl
+        })
+        if (re.code === 1) {
+          const result = await api.getUserDetail(this.$store.state.openid)
+          if (result.code === 1) {
+            this.saveMiaoyiUser(res.data)
+          } else {
+            Toast.fail('存入store失败，请重新打开小程序')
+          }
+        }
+      }
+      if (res.code === 1) {
+        this.saveMiaoyiUser(res.data)
       }
     }
   }
@@ -199,5 +249,9 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+  }
+  .popup-class {
+    height: 850rpx;
+    width: 600rpx;
   }
 </style>

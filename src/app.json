@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/authorize",
     "pages/index",
     "pages/counter",
     "pages/info",
@@ -12,12 +13,13 @@
     "pages/member",
     "pages/coupon",
     "pages/address",
-    "pages/addressEditor"
+    "pages/addressEditor",
+    "pages/appraise"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "妙尚佳",
+    "navigationBarTitleText": "妙尚佳到家服务平台",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {

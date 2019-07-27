@@ -9,7 +9,6 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "wx33593e56c8dba956",
 	"projectname": "miaoyidj",
 	"condition": {
 		"search": {

@@ -3,14 +3,14 @@
     <div class="address-item">
       <div class="address-item-con">
         <div class="moren" v-if="showBo">
-          <van-icon name="checked" />
+          <van-icon :color="addressItem.color" name="checked" />
         </div>
         <div class="address-item-add">
-          <div class="address-item-big">安神123</div>
-          <div class="address-item-small">阿斯弗 1878</div>
+          <div class="address-item-big">{{addressItem.aaddress}}&nbsp;&nbsp;{{addressItem.aaddressDetail}}</div>
+          <div class="address-item-small">{{addressItem.aname}}&nbsp;&nbsp;{{addressItem.amobile}}</div>
         </div>
         <div class="address-item-ic">
-          <van-icon @click="addressEdit" name="edit" size="24px"/>
+          <van-icon @click.stop="addressEdit" name="edit" size="24px"/>
         </div>
       </div>
     </div>
@@ -28,7 +28,7 @@
     },
     methods: {
       addressEdit () {
-        this.$router.push({path: '/pages/addressEditor'})
+        this.$router.push({path: '/pages/addressEditor', query: {item: JSON.stringify(this.addressItem)}})
       }
     }
   }

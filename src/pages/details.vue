@@ -1,12 +1,13 @@
 <template>
   <div>
     <div class="details-img">
-      <img style="height: 100%;width: 100%" src="https://i.loli.net/2017/08/21/599a521472424.jpg"/>
+      <img style="height: 100%;width: 100%" :src="productInfo.pcover"/>
     </div>
     <div class="details-i">
       <div class="details-info">
-        <div class="details-info-title">这是标题</div>
-        <div class="details-info-price">￥&nbsp;123元&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="details-info-title">{{productInfo.pname}}</div>
+        <div class="details-info-price">￥&nbsp;{{productInfo.pprice}}元&nbsp;&nbsp;
+          <div class="original-class">原价:{{productInfo.poriginalPrice}}</div>&nbsp;&nbsp;&nbsp;&nbsp;
           <i-tag
             class="i-tags"
             name="单个标签"
@@ -21,14 +22,21 @@
             上门服务
           </i-tag>
         </div>
-        <div class="details-info-remark">项目简介：这是简介</div>
+        <div class="details-info-remark">项目简介：{{productInfo.pintroInfo}}</div>
         <div class="details-info-review">好评率100%</div>
+      </div>
+    </div>
+    <div style="height: 15rpx;background-color: whitesmoke"></div>
+    <mytitle :title="title3"/>
+    <div class="service-info">
+      <div class="service-info-content">
+        {{productInfo.pname}}/{{productInfo.pprice}}元
       </div>
     </div>
     <div style="height: 15rpx;background-color: whitesmoke"></div>
     <mytitle :title="title1"/>
     <div class="estimate">
-      <review/>
+      <review :review="reviewInfo"/>
     </div>
     <div class="more-estimate">
       <button class="more-estimate-button" @click="moreReview">查看更多</button>
@@ -40,16 +48,13 @@
     <mytitle :title="title2"/>
     <div class="estimate">
       <div class="estimate-content">
-        下单时请注意查看地址是否正确，并仔细填写手机号，支付前请详细核对订单信息。
-        手机注意保持电话通畅，请注意不要遗漏技师来电，如果因为手机号无效所产生的
-        服务未完成，概不负责。
-      </div>
-    </div>
-    <div style="height: 15rpx;background-color: whitesmoke"></div>
-    <mytitle :title="title3"/>
-    <div class="service-info">
-      <div class="service-info-content">
-        这是标题/122元
+        1、本店严格拒绝一切形式的非正规服务，举报有奖；
+        2、订单确认后修改订单或退款需提前两小时通知；
+        3、预约时间前两小时退款将按30元/人扣取空单费；
+        4、如商家接单后爽约将全额退款并向您额外赔付30元；
+        5、为保障您的权益，所有费用请通过妙尚佳平台支付；
+        6、本店24小时上门服务，因夜间交通不便，晚21:00-7:00之间服务的订单，
+        须向技师支付30元车费。
       </div>
     </div>
     <div class="foot">
@@ -72,6 +77,7 @@
       </div>
       <div style="width: 5%;background-color: white;height: 100%"></div>
     </div>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
@@ -79,20 +85,26 @@
   import review from '@/components/review'
   import { mapState } from 'vuex'
   import wxParse from 'mpvue-wxparse'
+  import Dialog from '../../static/vant/dialog/dialog'
   import api from '@/api/index'
   export default {
     config: {
+      navigationBarTitleText: '',
       usingComponents: {
         'i-icon': '../../static/iview/icon/index',
         'i-tag': '../../static/iview/tag/index',
         'i-avatar': '../../static/iview/avatar/index',
         'i-button': '../../static/iview/button/index',
-        'i-rate': '../../static/iview/rate/index'
+        'i-rate': '../../static/iview/rate/index',
+        'van-dialog': '../../static/vant/dialog/index',
+        'van-popup': '../../static/vant/popup/index',
+        'van-button': '../../static/vant/button/index'
       }
     },
     computed: {
       ...mapState([
-        'phone'
+        'phone',
+        'productInfo'
       ])
     },
     components: {
@@ -100,27 +112,43 @@
       review,
       wxParse
     },
-    mounted () {
-      console.log('res：', this.$route.query.item)
-      this.getListImage(1)
-      // await Promise.all([
-      //   this.getListImage(1)
-      // ])
+    async mounted () {
+      await Promise.all([
+        this.getListImage(this.$store.state.productInfo.pid),
+        this.getNowReview()
+      ])
+      wx.setNavigationBarTitle({
+        title: this.$store.state.productInfo.pname
+      })
     },
     data () {
       return {
         title1: '用户评价',
-        title2: '温馨提示',
+        title2: '订购须知',
         title3: '服务详情',
-        title4: '项目详情',
+        title4: '图文详情',
         productHtmlImg: '',
+        reviewInfo: {
+          user: {
+            uavatar: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
+            uname: '卡萨'
+          },
+          rrate: 5,
+          rreviewTime: '2019-07-17 19:49:08',
+          rcontent: '哈哈哈哈'
+        },
         productItem: ''
       }
     },
     methods: {
       callMerchant () {
-        wx.makePhoneCall({
-          phoneNumber: this.$store.state.phone
+        Dialog.confirm({
+          message: '是否拨打电话'
+        }).then(() => {
+          wx.makePhoneCall({
+            phoneNumber: this.$store.state.phone
+          })
+        }).catch(() => {
         })
       },
       placeOrder () {
@@ -128,11 +156,19 @@
         this.$router.push(url)
       },
       moreReview () {
-        console.log('查看更多评价')
+        this.$router.push({path: '/pages/appraise'})
       },
       async getListImage (id) {
         const res = await api.getHtmlCode(id)
-        this.productHtmlImg = res.data
+        if (res.code === 1) {
+          this.productHtmlImg = res.data
+        }
+      },
+      async getNowReview () {
+        const data = await api.getDetailReview()
+        if (data.code === 1) {
+          this.reviewInfo = data.data
+        }
       }
     }
   }
@@ -256,5 +292,9 @@
     width: 90%;
     font-size: 12pt;
     color: #353535;
+  }
+  .original-class {
+    font-size: 11pt;
+    text-decoration: line-through;
   }
 </style>

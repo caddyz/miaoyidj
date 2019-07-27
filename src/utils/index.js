@@ -49,11 +49,27 @@ export function getDeList (date) {
   return list
 }
 
+export function createOrderNo () {
+  let str = ''
+  for (let i = 0; i < 7; i++) { // 6位随机数，用以加在时间戳后面。
+    str += Math.floor(Math.random() * 10)
+  }
+  str = new Date().getTime() + str
+  return `${str}`
+}
+
+export function getYear (date) {
+  const year = date.getFullYear()
+  return `${year}`
+}
+
 export default {
   formatNumber,
   formatTime,
   getNowHour,
   getNowDay,
   getTwoDate,
-  getDeList
+  getDeList,
+  createOrderNo,
+  getYear
 }

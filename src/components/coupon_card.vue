@@ -8,7 +8,9 @@
         {{tit}}
       </div>
       <div class="address-text-show">
-        {{timeVal}}
+        <span v-if="couponObj.cstatus === 1">{{couponObj.cvalue}}元</span>
+        <span v-if="couponObj.cstatus === 2">{{couponObj.cvalue}}折</span>
+        <span></span>
       </div>
       <div class="address-card-bottom-icon">
         <i-icon type="enter" size="20" color="lightgrey"/>
@@ -22,8 +24,8 @@
       tit: {
         type: String
       },
-      timeVal: {
-        type: String
+      couponObj: {
+        type: Object
       },
       url: {
         type: String

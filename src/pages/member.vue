@@ -5,13 +5,13 @@
         <div class="info-top-content-tx">
           <div class="touxiang">
             <div class="tupian">
-              <img style="width: 90%;height: 90%;border-radius: 50px" src="https://i.loli.net/2017/08/21/599a521472424.jpg"/>
+              <img style="width: 90%;height: 90%;border-radius: 50px" :src="miaoyiUser.uavatar"/>
             </div>
             <div class="na">
               <div style="width: 90%;height: 100%;">
-                <div class="na-name">kaiserZ</div>
+                <div class="na-name">{{miaoyiUser.uname}}</div>
                 <div class="na-tag">
-                  <i-tag v-if="memberTrue"
+                  <i-tag v-if="miaoyiUser.ustatus"
                          class="i-tags"
                          name="单个标签"
                          color="yellow">
@@ -24,7 +24,7 @@
                     用户
                   </i-tag>
                 </div>
-                <div class="na-point">积分:12</div>
+                <div class="na-point">积分:{{miaoyiUser.upoints}}</div>
               </div>
             </div>
           </div>
@@ -38,7 +38,7 @@
       <div class="member-money">
         <div class="wo-qian">
           <div class="yu-e">余额:</div>
-          <div class="sheng-qian">123元</div>
+          <div class="sheng-qian">{{miaoyiUser.umemberMoney}}元</div>
         </div>
       </div>
       <div style="height: 15rpx;background-color: whitesmoke"></div>
@@ -46,6 +46,18 @@
         <i-button bind:click="handleClick" inline type="error">500元</i-button>
         <i-button bind:click="handleClick" inline type="error">1000元</i-button>
         <i-button bind:click="handleClick" inline type="error">2000元</i-button>
+      </div>
+      <div style="height: 55rpx"></div>
+      <div class="addInput">
+        <div style="width: 90%;">
+          <van-field
+            :value="money"
+            type="number"
+            label="充值金额"
+            placeholder="请输入充值金额"
+            @change="getMoney"
+          />
+        </div>
       </div>
     </div>
     <div class="member-foot">
@@ -56,6 +68,7 @@
 </template>
 <script>
   import Dialog from '../../static/vant/dialog/dialog'
+  import { mapState } from 'vuex'
   export default {
     config: {
       navigationBarTitleText: '会员',
@@ -65,14 +78,20 @@
         'i-button': '../../static/iview/button/index',
         'van-dialog': '../../static/vant/dialog/index',
         'van-popup': '../../static/vant/popup/index',
+        'van-field': '../../static/vant/field/index',
         'van-button': '../../static/vant/button/index'
       }
+    },
+    computed: {
+      ...mapState([
+        'miaoyiUser'
+      ])
     },
     components: {
     },
     data () {
       return {
-        memberTrue: false
+        money: ''
       }
     },
     methods: {
@@ -82,6 +101,9 @@
         }).then(() => {
           // on close
         })
+      },
+      getMoney (e) {
+        this.money = e.mp.detail
       }
     }
   }
@@ -197,6 +219,10 @@
     width: 100%;
   }
   .member-cz {
+    display: flex;
+    justify-content: center;
+  }
+  .addInput {
     display: flex;
     justify-content: center;
   }
