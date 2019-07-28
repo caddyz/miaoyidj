@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="info-top-content-co">
-          <button class="get-points" @click="getPoints">获取积分</button>
+          <button class="get-points" @click="getPoints">积分规则</button>
         </div>
       </div>
     </div>
@@ -116,8 +116,11 @@
         'saveMiaoyiUser'
       ]),
       getPoints () {
-        const url = '/pages/member'
-        this.$router.push(url)
+        Dialog.alert({
+          message: '积分只在会员充值时赠送,充值多少送多少积分'
+        }).then(() => {
+          // on close
+        })
       },
       callPhone () {
         Dialog.confirm({

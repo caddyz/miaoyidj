@@ -110,7 +110,11 @@ export default {
       console.log('111')
     },
     indexRouter (e) {
-      console.log('获取到的id：', e.currentTarget.dataset.index)
+      if (e.currentTarget.dataset.index === '1') {
+        this.$router.push({path: '/pages/getCoupon'})
+      } else {
+        console.log('获取到的id：', e.currentTarget.dataset.index)
+      }
     },
     goDetails (item) {
       this.saveProductInfo(item)

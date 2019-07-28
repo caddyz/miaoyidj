@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="info-top-content-co">
-          <button class="get-points" @click="pointsRule">积分规则</button>
+          <button class="get-points" @click="pointsRule">消费明细</button>
         </div>
       </div>
     </div>
@@ -63,11 +63,9 @@
     <div class="member-foot">
       <i-button bind:click="handleClick" type="error" long="true">充值</i-button>
     </div>
-    <van-dialog id="van-dialog"/>
   </div>
 </template>
 <script>
-  import Dialog from '../../static/vant/dialog/dialog'
   import { mapState } from 'vuex'
   export default {
     config: {
@@ -76,10 +74,7 @@
         'i-tag': '../../static/iview/tag/index',
         'i-icon': '../../static/iview/icon/index',
         'i-button': '../../static/iview/button/index',
-        'van-dialog': '../../static/vant/dialog/index',
-        'van-popup': '../../static/vant/popup/index',
-        'van-field': '../../static/vant/field/index',
-        'van-button': '../../static/vant/button/index'
+        'van-field': '../../static/vant/field/index'
       }
     },
     computed: {
@@ -96,11 +91,7 @@
     },
     methods: {
       pointsRule () {
-        Dialog.alert({
-          message: '积分只在会员充值时赠送,充值多少送多少积分'
-        }).then(() => {
-          // on close
-        })
+        this.$router.push({path: '/pages/consumeDetail'})
       },
       getMoney (e) {
         this.money = e.mp.detail

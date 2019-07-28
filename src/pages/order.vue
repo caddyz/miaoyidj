@@ -75,7 +75,9 @@
         'van-tabs': '../../static/vant/tabs/index',
         'van-icon': '../../static/vant/icon/index',
         'van-button': '../../static/vant/button/index',
-        'van-tab': '../../static/vant/tab/index'
+        'van-tab': '../../static/vant/tab/index',
+        'van-dialog': '../../static/vant/dialog/index',
+        'van-popup': '../../static/vant/popup/index'
       }
     },
     components: {

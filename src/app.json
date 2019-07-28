@@ -14,7 +14,10 @@
     "pages/coupon",
     "pages/address",
     "pages/addressEditor",
-    "pages/appraise"
+    "pages/appraise",
+    "pages/appraiseAdd",
+    "pages/getCoupon",
+    "pages/consumeDetail"
   ],
   "window": {
     "backgroundTextStyle": "light",

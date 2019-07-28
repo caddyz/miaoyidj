@@ -31,14 +31,22 @@
     <div class="intro-button">
       <van-button plain hairline type="danger" size="small" @click="buttonClick">{{buttonVal}}</van-button>
     </div>
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 <script>
+  import { mapState } from 'vuex'
+  import Dialog from '../../static/vant/dialog/dialog'
   export default {
     props: {
       orderVal: {
         type: Object
       }
+    },
+    computed: {
+      ...mapState([
+        'phone'
+      ])
     },
     data () {
       return {
@@ -75,22 +83,22 @@
       buttonClick () {
         switch (this.orderVal.state) {
           case 0:
-            wx.makePhoneCall({
-              phoneNumber: '1340000' // 仅为示例，并非真实的电话号码
+          case 2:
+            Dialog.confirm({
+              message: '是否拨打电话'
+            }).then(() => {
+              wx.makePhoneCall({
+                phoneNumber: this.$store.state.phone
+              })
+            }).catch(() => {
             })
             break
           case 1:
             const url1 = '/pages/pay'
             this.$router.push(url1)
             break
-          case 2:
-            wx.makePhoneCall({
-              phoneNumber: '1340000' // 仅为示例，并非真实的电话号码
-            })
-            break
           case 3:
-            const url2 = '/pages/coupon'
-            this.$router.push(url2)
+            this.$router.push({path: '/pages/appraiseAdd'})
             break
         }
       }
