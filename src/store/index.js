@@ -8,22 +8,13 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     phone: '18116585239',
-    userInfo: {},
+    city: '',
     productInfo: {},
-    openid: '',
     miaoyiUser: {},
     addressInfo: {},
     couponInfo: {}
   },
   mutations: {
-    saveUserInfo: (state, info) => {
-      const obj = state
-      obj.userInfo = info
-    },
-    saveOpenid: (state, openid) => {
-      const obj = state
-      obj.openid = openid
-    },
     saveMiaoyiUser: (state, user) => {
       const obj = state
       obj.miaoyiUser = user
@@ -39,6 +30,10 @@ const store = new Vuex.Store({
     saveCouponInfo: (state, coupon) => {
       const obj = state
       obj.couponInfo = coupon
+    },
+    saveCity: (state, city) => {
+      const obj = state
+      obj.city = city
     }
   }
 })

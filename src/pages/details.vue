@@ -29,9 +29,10 @@
     <div style="height: 15rpx;background-color: whitesmoke"></div>
     <mytitle :title="title3"/>
     <div class="service-info">
-      <div class="service-info-content">
-        {{productInfo.pname}}/{{productInfo.pprice}}元
-      </div>
+<!--      <div class="service-info-content">-->
+<!--        {{productInfo.pname}}/{{productInfo.pprice}}元-->
+<!--      </div>-->
+      <wx-parse :content="productInfo.pdetailInfo"/>
     </div>
     <div style="height: 15rpx;background-color: whitesmoke"></div>
     <mytitle :title="title1"/>
@@ -54,7 +55,8 @@
         4、如商家接单后爽约将全额退款并向您额外赔付30元；<br/>
         5、为保障您的权益，所有费用请通过妙尚佳平台支付；<br/>
         6、本店24小时上门服务，因夜间交通不便，晚21:00-7:00之间服务的订单，
-        须向技师支付30元车费。
+        须向技师支付30元车费。<br>
+        7、最终解释权归本公司所有。
       </div>
     </div>
     <div class="foot">
@@ -265,11 +267,10 @@
     width: 90%;
     font-size: 11pt;
     color: #888;
-    text-indent: 2em;
     margin-bottom: 25rpx;
   }
   .more-estimate {
-    margin-top: 25rpx;
+    margin-top: 5rpx;
     height: 75rpx;
     display: flex;
     justify-content: center;
@@ -285,7 +286,7 @@
     justify-content: center;
     align-items: center;
   }
-  .service-info {
+  .estimate-content {
     padding-bottom: 155rpx;
   }
   .service-info-content {

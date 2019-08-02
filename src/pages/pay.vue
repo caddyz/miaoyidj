@@ -32,6 +32,14 @@
     <div class="foot">
       <i-button @click="confirmPay" type="error" long="true">支付</i-button>
     </div>
+    <van-action-sheet
+      :show="show"
+      :actions="actions"
+      cancel-text="取消"
+      @close="actionsClose"
+      @cancel="actionsCancel"
+      @select="actionsSelect"
+    />
   </div>
 </template>
 <script>
@@ -45,6 +53,7 @@
         'i-tag': '../../static/iview/tag/index',
         'van-cell-group': '../../static/vant/cell-group/index',
         'van-cell': '../../static/vant/cell/index',
+        'van-action-sheet': '../../static/vant/action-sheet/index',
         'van-field': '../../static/vant/field/index'
       }
     },
@@ -56,11 +65,22 @@
     },
     data () {
       return {
+        show: false,
+        actions: [
+          {
+            id: 1,
+            name: '微信支付'
+          },
+          {
+            id: 2,
+            name: '会员余额'
+          }
+        ],
         borderBu: false,
         orderInfo: {},
         product: {},
         addressDet: '',
-        ti: '',
+        ti: '' + '点',
         remark: '',
         pri: ''
       }
@@ -75,6 +95,23 @@
           this.remark = res.data.ouserMessage
           this.pri = res.data.opayPrice
         }
+      },
+      confirmPay () {
+        this.show = !this.show
+      },
+      actionsClose () {
+        this.show = false
+      },
+      actionsCancel () {
+        this.show = false
+      },
+      actionsSelect (e) {
+        console.log('choose:', e.mp.detail.id)
+        if (e.mp.detail.id === 2) {
+          console.log('会员支付')
+          return
+        }
+        console.log('微信支付')
       }
     }
   }

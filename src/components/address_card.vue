@@ -7,13 +7,16 @@
       <div class="address-text-else">
         服务地址
       </div>
-      <div class="address-text">
+      <div v-if="addressObj.aaddress !== undefined" class="address-text">
         <div class="address-text-top">
           {{addressObj.aaddress}}
         </div>
         <div class="address-text-bottom">
           {{addressObj.aaddressDetail}}
         </div>
+      </div>
+      <div v-else class="address-text-e">
+        {{city}}
       </div>
       <div class="address-card-bottom-icon">
         <slot></slot>
@@ -29,6 +32,9 @@
       },
       addressObj: {
         type: Object
+      },
+      city: {
+        type: String
       }
     },
     data () {
@@ -56,7 +62,7 @@
     height: 100%;
     border-bottom: 1px solid whitesmoke;
   }
-  .address-text {
+  .address-text, .address-text-e {
     margin-top: 10rpx;
     width: 50%;
     height: 100%;
@@ -95,5 +101,12 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+  .address-text-e {
+    font-size: 13pt;
+    color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

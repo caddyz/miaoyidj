@@ -3,14 +3,14 @@
     <div class="order-detail-top">
       <div class="order-detail-top-content">
         <div class="order-detail-top-state">订单状态:</div>
-        <div v-if="stateVal === 1" style="color:#888;" class="static">未支付</div>
-        <div v-if="stateVal === 2" style="color:#09BB07;" class="static">已支付</div>
-        <div v-if="stateVal === 3" style="color:#09BB07;" class="static">已完成</div>
-        <div v-if="stateVal === 0" style="color:red;" class="static">已取消</div>
+        <div v-if="orderItem.ostatus === 1" style="color:#888;" class="static">未支付</div>
+        <div v-if="orderItem.ostatus === 2" style="color:#09BB07;" class="static">已支付</div>
+        <div v-if="orderItem.ostatus === 3" style="color:#09BB07;" class="static">已完成</div>
+        <div v-if="orderItem.ostatus === 0" style="color:red;" class="static">已取消</div>
       </div>
     </div>
     <div style="height: 25rpx;background-color: whitesmoke"></div>
-    <ordercard/>
+    <ordercard :orderObj="productItem"/>
     <div style="height: 25rpx;background-color: whitesmoke"></div>
     <div class="order-detail">
       <div class="order-detail-info">
@@ -21,30 +21,30 @@
         </div>
         <div class="order-detail-info-con">
           <div class="order-detail-info-con-ti">订单编号</div>
-          <div class="order-detail-info-con-te">上门服务</div>
+          <div class="order-detail-info-con-te">{{orderItem.onumber}}</div>
         </div>
         <div class="order-detail-info-con">
-          <div class="order-detail-info-con-ti">服务时间</div>
-          <div class="order-detail-info-con-te">上门服务</div>
+          <div class="order-detail-info-con-ti">预约时间</div>
+          <div class="order-detail-info-con-te">{{orderItem.osubscribeTime}}点</div>
         </div>
         <div class="order-detail-info-con">
           <div class="order-detail-info-con-ti">服务地址</div>
-          <div class="order-detail-info-con-te">上门服务</div>
+          <div class="order-detail-info-con-te">{{addressItem.aaddress}} {{addressItem.aaddressDetail}}</div>
         </div>
         <div class="order-detail-info-con">
           <div class="order-detail-info-con-ti">下单时间</div>
-          <div class="order-detail-info-con-te">上门服务</div>
+          <div class="order-detail-info-con-te">{{orderItem.ocreateTime}}</div>
         </div>
         <div class="order-detail-info-con">
           <div class="order-detail-info-con-ti">订单总价</div>
-          <div class="order-detail-info-con-te">上门服务</div>
+          <div class="order-detail-info-con-te">{{orderItem.ototalPrice}}</div>
         </div>
         <div class="order-detail-info-con">
           <div class="order-detail-info-con-ti">联系人</div>
-          <div class="order-detail-info-con-te">上门服务</div>
+          <div class="order-detail-info-con-te">{{addressItem.aname}}  {{addressItem.amobile}}</div>
         </div>
         <div class="order-detail-pay">
-          <span style="font-weight: bold">实际支付:</span>&nbsp;&nbsp;<span style="color: red">123元</span>
+          <span style="font-weight: bold">实际支付:</span>&nbsp;&nbsp;<span style="color: red">{{orderItem.opayPrice}}元</span>
         </div>
       </div>
     </div>
@@ -62,9 +62,18 @@
     components: {
       ordercard
     },
+    mounted () {
+      let r = JSON.parse(this.$route.query.item)
+      this.orderItem = r
+      this.productItem = r.product
+      this.addressItem = r.address
+    },
     data () {
       return {
-        stateVal: 0
+        stateVal: 0,
+        orderItem: {},
+        productItem: {},
+        addressItem: {}
       }
     }
   }

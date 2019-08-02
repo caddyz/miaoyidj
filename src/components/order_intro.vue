@@ -9,7 +9,7 @@
                 <img style="height: 100%;width: 100%" src="/static/img/sj.png" alt=""/>
               </div>
             </div>
-            <div class="intro-top-name-name">秒一到家</div>
+            <div class="intro-top-name-name">妙尚佳到家服务</div>
           </div>
           <div class="intro-top-state">{{payState}}</div>
         </div>
@@ -17,12 +17,12 @@
           <div class="intro-content-middle-content">
             <van-icon name="clock-o" size="11"/>
             <div style="width: 2%;"></div>
-            <div class="middle-content-text">{{orderVal.timeVal}}</div>
+            <div class="middle-content-text">{{orderVal.osubscribeTime}}点</div>
           </div>
           <div class="intro-content-middle-content">
             <van-icon name="location-o" size="11"/>
             <div style="width: 2%;"></div>
-            <div class="middle-content-text">{{orderVal.addressVal}}</div>
+            <div class="middle-content-text">{{orderVal.address.aaddress}} {{orderVal.address.aaddressDetail}}</div>
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@
       }
     },
     mounted () {
-      switch (this.orderVal.state) {
+      switch (this.orderVal.ostatus) {
         case 0:
           this.payState = '已取消'
           this.buttonVal = '联系商家'
@@ -77,11 +77,10 @@
     methods: {
       checkOrderDetail (e) {
         console.log('订单:', e.mp.currentTarget.dataset.item)
-        const url = '/pages/orderDetail'
-        this.$router.push(url)
+        this.$router.push({path: '/pages/orderDetail', query: {item: JSON.stringify(e.mp.currentTarget.dataset.item)}})
       },
       buttonClick () {
-        switch (this.orderVal.state) {
+        switch (this.orderVal.ostatus) {
           case 0:
           case 2:
             Dialog.confirm({
@@ -94,8 +93,7 @@
             })
             break
           case 1:
-            const url1 = '/pages/pay'
-            this.$router.push(url1)
+            this.$router.push({path: '/pages/pay', query: {orderNo: this.orderVal.onumber}})
             break
           case 3:
             this.$router.push({path: '/pages/appraiseAdd'})

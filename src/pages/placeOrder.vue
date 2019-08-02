@@ -1,6 +1,6 @@
 <template>
   <div>
-    <addresscard :addressObj="addressInfo">
+    <addresscard :addressObj="addressInfo" :city="city">
       <i-icon type="enter" size="20" color="lightgrey"/>
     </addresscard>
     <picker mode="multiSelector"
@@ -42,7 +42,7 @@
       </div>
       <div class="foot-pay">
         <div style="height: 10%"></div>
-        <i-button  @click="goPay" type="error" long="true">下单</i-button>
+        <i-button  @click="goPay" type="error" long="true">立即预约</i-button>
       </div>
     </div>
     <van-dialog id="van-dialog" />
@@ -86,6 +86,7 @@
         'addressInfo',
         'productInfo',
         'miaoyiUser',
+        'city',
         'couponInfo'
       ])
     },

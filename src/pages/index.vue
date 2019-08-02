@@ -4,7 +4,7 @@
       <div class="localtion">
         <div class="city">
           <i-icon size="18" type="coordinates"/>
-          <div @click="changeCity">{{city}}</div>
+          <div class="city-class">{{city}}</div>
         </div>
         <div class="top_font">妙尚佳为您服务</div>
       </div>
@@ -16,15 +16,15 @@
         </div>
         <div data-index="2" @click="indexRouter">
           <img src="../../static/img/new_man.png" class="nav_icon"/>
-          <div class="nav_text">新人优惠</div>
+          <div class="nav_text">全场满减</div>
         </div>
         <div data-index="3" @click="indexRouter">
           <img src="../../static/img/new_man.png" class="nav_icon"/>
-          <div class="nav_text">新人优惠</div>
+          <div class="nav_text">单项优惠</div>
         </div>
         <div data-index="4" @click="indexRouter">
           <img src="../../static/img/new_man.png" class="nav_icon"/>
-          <div class="nav_text">新人优惠</div>
+          <div class="nav_text">会员八折</div>
         </div>
       </div>
       <div class="tit-ti">热门服务</div>
@@ -40,11 +40,6 @@
       <div class="tit">推荐服务</div>
       <card v-for="(item,index) in info" :key="index" :info="item"/>
     </div>
-    <!--<van-popup :show="show" @close="onClose">-->
-      <!--<div>-->
-        <!--<img class="popup-class" mode="aspectFill" src="https://miaoyidj-1253818867.cos.ap-chengdu.myqcloud.com/%E5%BC%B9%E5%87%BA/%E5%A6%99%E5%B0%9A%E4%BD%B3%E5%AE%A3%E4%BC%A0%E5%9B%BE800%E5%89%AF%E6%9C%AC.jpg" alt=""/>-->
-      <!--</div>-->
-    <!--</van-popup>-->
     <van-toast id="van-toast" />
   </div>
 </template>
@@ -55,9 +50,10 @@ import myswiper from '@/components/my_swiper'
 import listcard from '@/components/list_card'
 import api from '@/api/index'
 import Details from './details'
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 import Toast from '../../static/vant/toast/toast'
-
+import QQMapWX from '../../static/libs/qqmap-wx-jssdk.js'
+import { APPID } from '@/utils/constant'
 export default {
   mpType: 'page',
   config: {
@@ -67,24 +63,33 @@ export default {
       'van-toast': '../../static/vant/toast/index'
     }
   },
-  computed: {
-    ...mapState([
-      'openid',
-      'test',
-      'userInfo'
-    ])
+  onLoad () {
+    wx.getSetting({
+      success: (res) => {
+        if ((res.authSetting)['scope.userInfo']) {
+          wx.login({
+            success: (res) => {
+              if (res.code) {
+                this.userLogin(res.code)
+              } else {
+                console.log('登录失败！' + res.errMsg)
+              }
+            }
+          })
+        }
+      }
+    })
   },
   async mounted () {
     await Promise.all([
-      this.getData(),
-      this.userLogin()
+      this.getData()
     ])
+    this.getIndexLocation()
   },
   data () {
     return {
       city: '成都',
       pa: [],
-      // show: true,
       images: [],
       hotInfo: [],
       info: []
@@ -101,19 +106,15 @@ export default {
   methods: {
     ...mapMutations([
       'saveMiaoyiUser',
+      'saveCity',
       'saveProductInfo'
     ]),
-    // onClose () {
-    //   this.show = false
-    // },
-    changeCity () {
-      console.log('111')
-    },
     indexRouter (e) {
       if (e.currentTarget.dataset.index === '1') {
         this.$router.push({path: '/pages/getCoupon'})
       } else {
         console.log('获取到的id：', e.currentTarget.dataset.index)
+        this.$router.push({path: '/pages/discounts'})
       }
     },
     goDetails (item) {
@@ -138,27 +139,71 @@ export default {
         }
       }
     },
-    async userLogin () {
-      const res = await api.getUserDetail(this.$store.state.openid)
-      console.log('结果', res)
-      if (res.code === 0) {
-        const re = await api.userRegister({
-          openid: this.$store.state.openid,
-          username: this.$store.state.userInfo.nickName,
-          avatar: this.$store.state.userInfo.avatarUrl
-        })
-        if (re.code === 1) {
-          const result = await api.getUserDetail(this.$store.state.openid)
-          if (result.code === 1) {
-            this.saveMiaoyiUser(res.data)
-          } else {
-            Toast.fail('存入store失败，请重新打开小程序')
-          }
+    async userLogin (code) {
+      const data = await api.wxLogin({appid: APPID, code: code})
+      if (data.openid) {
+        const res = await api.getUserDetail(data.openid)
+        if (res.code === 1) {
+          this.saveMiaoyiUser(res.data)
         }
+      } else {
+        Toast.fail('获取小程序openid失败')
       }
-      if (res.code === 1) {
-        this.saveMiaoyiUser(res.data)
-      }
+    },
+    getIndexLocation () {
+      const location = new QQMapWX({
+        key: 'OY4BZ-MX36W-FCQR2-OWEPM-ABXKQ-ACBWZ'
+      })
+      wx.getSetting({
+        success: (res) => {
+          console.log(res.authSetting)
+          if ((res.authSetting)['scope.userLocation']) {
+            wx.getLocation({
+              type: 'gcj02',
+              success: (res) => {
+                location.reverseGeocoder({
+                  location: {
+                    latitude: res.latitude,
+                    longitude: res.longitude
+                  },
+                  success: (res) => {
+                    this.city = res.result.address_component.street_number
+                    this.saveCity(res.result.address_component.street_number)
+                  },
+                  fail: (err) => {
+                    console.log(err)
+                    Toast.fail('获取地理位置失败')
+                  }
+                })
+              }
+            })
+          }
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success: () => {
+              wx.getLocation({
+                type: 'gcj02',
+                success: (res) => {
+                  location.reverseGeocoder({
+                    location: {
+                      latitude: res.latitude,
+                      longitude: res.longitude
+                    },
+                    success: (res) => {
+                      this.city = res.result.address_component.street_number
+                      this.saveCity(res.result.address_component.street_number)
+                    },
+                    fail: (err) => {
+                      console.log(err)
+                      Toast.fail('获取地理位置失败')
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
     }
   }
 }
@@ -204,16 +249,22 @@ export default {
   .city {
     display: flex;
     flex-direction: row;
+    width: 50%;
     i-icon {
+      width: 20%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     div {
+      width: 80%;
       font-weight: 300;
       font-size: 35rpx;
       display: flex;
       align-items: center;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
     }
   }
   .hot {

@@ -15,13 +15,13 @@
                          class="i-tags"
                          name="单个标签"
                          color="yellow">
-                    会员
+                    VIP
                   </i-tag>
                   <i-tag v-else
                          class="i-tags"
                          name="单个标签"
                          color="yellow">
-                    用户
+                    会员
                   </i-tag>
                 </div>
                 <div class="na-point">积分:{{miaoyiUser.upoints}}</div>
@@ -43,9 +43,9 @@
       </div>
       <div style="height: 15rpx;background-color: whitesmoke"></div>
       <div class="member-cz">
-        <i-button bind:click="handleClick" inline type="error">500元</i-button>
-        <i-button bind:click="handleClick" inline type="error">1000元</i-button>
-        <i-button bind:click="handleClick" inline type="error">2000元</i-button>
+        <i-button @click="recharge" inline type="error">充500送100</i-button>
+        <i-button @click="recharge" inline type="error">充1000送200</i-button>
+        <i-button @click="recharge" inline type="error">2000元</i-button>
       </div>
       <div style="height: 55rpx"></div>
       <div class="addInput">
@@ -60,8 +60,10 @@
         </div>
       </div>
     </div>
+<!--    <div style="height: 99rpx"></div>-->
+<!--    <div >查看充值规则</div>-->
     <div class="member-foot">
-      <i-button bind:click="handleClick" type="error" long="true">充值</i-button>
+      <i-button @click="recharge" type="error" long="true">充值</i-button>
     </div>
   </div>
 </template>
@@ -95,6 +97,9 @@
       },
       getMoney (e) {
         this.money = e.mp.detail
+      },
+      recharge () {
+        console.log('chong')
       }
     }
   }

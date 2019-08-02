@@ -49,11 +49,11 @@
     height: 100%;
   }
   .review-info-rate {
-    width: 60%;
+    width: 50%;
     height: 100%;
   }
   .review-info-time {
-    width: 20%;
+    width: 30%;
     height: 100%;
     font-size: 9pt;
     color: #888;

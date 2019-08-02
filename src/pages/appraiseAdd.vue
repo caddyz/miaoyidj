@@ -1,22 +1,19 @@
 <template>
   <div>
-    <div>评分</div>
-    <i-rate
-      @change="changeRate"
-      :value="rate">
-    </i-rate>
+    <i-panel :hide-border="hideVal" title="评分">
+      <i-rate
+        @change="changeRate"
+        :value="rate">
+      </i-rate>
+    </i-panel>
     <div>
-      <div>评价</div>
-      <!--<van-field
-        :value="message"
-        type="textarea"
-        placeholder="请输入评价内容"
-        autosize
-        :border="borderBo"
-        @change="getMessageVal"
-      />-->
-<!--      <van-button type="primary">提交评价</van-button>-->
-
+      <i-panel :hide-border="hideVal" title="评价内容">
+        <i-input :value="message" placeholder="请输入评价内容(最多225个字)"
+                 type="textarea" maxlength="225" @change="getMessageVal"/>
+      </i-panel>
+    </div>
+    <div class="bu-class">
+      <i-button @click="submitRemark" inline type="error">提交</i-button>
     </div>
   </div>
 </template>
@@ -27,6 +24,7 @@
       usingComponents: {
         'i-rate': '../../static/iview/rate/index',
         'i-button': '../../static/iview/button/index',
+        'i-panel': '../../static/iview/panel/index',
         'i-input': '../../static/iview/input/index'
       }
     },
@@ -34,17 +32,31 @@
       return {
         rate: 0,
         borderBo: false,
-        message: ''
+        message: '',
+        hideVal: true
       }
     },
     methods: {
       getMessageVal (e) {
-        this.message = e.mp.detail
+        this.message = e.mp.detail.detail.value
       },
       changeRate (e) {
         this.rate = e.mp.detail.index
+      },
+      submitRemark () {
+        console.log('message:', this.message)
+        console.log('rate:', this.rate)
       }
     }
   }
 </script>
-<style></style>
+<style scoped>
+  .bu-class {
+    display: flex;
+    justify-content: center;
+  }
+  .rateClass {
+    display: flex;
+    justify-content: center;
+  }
+</style>

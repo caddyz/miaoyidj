@@ -66,6 +66,10 @@ const api = {
   // 查询详细订单
   getOrderDetail: (r) => fly.get('order/getOrderByOrderNo', {orderNo: r}, {
     baseURL: baseURI
+  }),
+  // 获取用户订单
+  getUserOrder: (r) => fly.get('order/userGetAllOrder', {userId: r}, {
+    baseURL: baseURI
   })
 }
 export default api

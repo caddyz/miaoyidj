@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="info-top">
-      <div class="info-top-content">
+    <div class="info-top" v-if="miaoyiUser.uname !== undefined">
+      <div class="info-top-content" >
         <div class="info-top-content-tx">
           <div class="touxiang">
             <div class="tupian">
@@ -15,13 +15,13 @@
                     class="i-tags"
                     name="单个标签"
                     color="yellow">
-                    会员
+                    VIP
                   </i-tag>
                   <i-tag v-else
                          class="i-tags"
                          name="单个标签"
                          color="yellow">
-                    用户
+                    会员
                   </i-tag>
                 </div>
                 <div class="na-point">积分:{{miaoyiUser.upoints}}</div>
@@ -31,6 +31,19 @@
         </div>
         <div class="info-top-content-co">
           <button class="get-points" @click="getPoints">积分规则</button>
+        </div>
+      </div>
+    </div>
+    <div class="info-top" v-else>
+      <div class="info-top-content" >
+        <div class="else-touxing">
+          <div class="else-tupian">
+            <img style="width: 90%;height: 90%;border-radius: 50px" src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3489251037,1613284493&fm=15&gp=0.jpg"/>
+          </div>
+        </div>
+        <div style="width: 10%"></div>
+        <div class="na-no">
+          <div @click="userGetLogin">点击登录</div>
         </div>
       </div>
     </div>
@@ -71,7 +84,7 @@
 <script>
   import titlecard from '@/components/title_card'
   import buttoncard from '@/components/button_card'
-  import { mapState, mapMutations } from 'vuex'
+  import { mapState } from 'vuex'
   import Dialog from '../../static/vant/dialog/dialog'
   export default {
     config: {
@@ -87,7 +100,6 @@
     },
     computed: {
       ...mapState([
-        'openid',
         'miaoyiUser',
         'phone'
       ])
@@ -105,16 +117,12 @@
         t3: '我的地址',
         t3url: '/pages/address',
         t4: '妙尚佳客服',
-        openTypeVal: 'contact',
-        userInfo: {}
+        openTypeVal: 'contact'
       }
     },
     mounted () {
     },
     methods: {
-      ...mapMutations([
-        'saveMiaoyiUser'
-      ]),
       getPoints () {
         Dialog.alert({
           message: '积分只在会员充值时赠送,充值多少送多少积分'
@@ -131,6 +139,9 @@
           })
         }).catch(() => {
         })
+      },
+      userGetLogin () {
+        this.$router.push({path: '/pages/authorize'})
       }
     }
   }
@@ -259,5 +270,21 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+  .na-no {
+    display: flex;
+    align-items: center;
+    width: 80%;
+  }
+  .else-touxing {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .else-tupian {
+    width: 80%;
+    height: 90%;
   }
 </style>

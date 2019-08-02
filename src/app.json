@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/authorize",
     "pages/index",
+    "pages/authorize",
     "pages/counter",
     "pages/info",
     "pages/details",
@@ -17,8 +17,14 @@
     "pages/appraise",
     "pages/appraiseAdd",
     "pages/getCoupon",
+    "pages/discounts",
     "pages/consumeDetail"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序定位以便获取更好的服务体验"
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
