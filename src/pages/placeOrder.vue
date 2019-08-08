@@ -32,6 +32,7 @@
     <couponcard :tit="couponTit" :couponObj="couponInfo" :url="couponUrl">
       <i-icon type="coupons" size="18"/>
     </couponcard>
+    <div>我的积分： {{miaoyiUser.upoints}}  <span @click="usePoints">使用积分</span></div>
     <div style="height: 25rpx;"></div>
     <div style="font-size: 9pt;color: #888;text-align: center">
       优惠券在下单之后不会返还
@@ -91,6 +92,7 @@
       ])
     },
     mounted () {
+      this.getPointsRule()
       this.timeValue = getYear(new Date()) + '-' + this.multiArray[0][this.multiIndex[0]] + '  ' + this.getHour()
       this.price = this.productInfo.pprice
     },
@@ -105,10 +107,20 @@
         couponUrl: '/pages/coupon',
         borderBo: false,
         timeValue: '',
-        price: 0
+        price: 0,
+        ratio: 1
       }
     },
     methods: {
+      async getPointsRule () {
+        const res = await api.getPointsRules()
+        if (res.code === 1) {
+          this.ratio = res.data.rmolPoints / res.data.rdenPoints
+        }
+      },
+      usePoints () {
+        this.price = this.price - Math.ceil(this.$store.state.miaoyiUser.upoints * this.ratio)
+      },
       getList () {
         let timeli = []
         for (let index in getDeList(new Date())) {
@@ -120,7 +132,7 @@
         return parseInt(getNowHour(new Date())) + 1
       },
       goPay () {
-        if (this.$store.state.addressInfo.aid === undefined) {
+        if (this.$store.state.addressInfo.aid === undefined && this.$store.state.city === undefined) {
           Toast.fail('没有选择地址，请选择！')
           return
         }

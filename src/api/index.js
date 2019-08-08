@@ -70,6 +70,34 @@ const api = {
   // 获取用户订单
   getUserOrder: (r) => fly.get('order/userGetAllOrder', {userId: r}, {
     baseURL: baseURI
+  }),
+  // 会员支付
+  memberPay: (r) => fly.get('user/memberPay', r, {
+    baseURL: baseURI
+  }),
+  // 更新订单状态
+  updateOrder: (r) => fly.get('order/orderPay', {orderNo: r}, {
+    baseURL: baseURI
+  }),
+  // 统一下单
+  unifiedOrder: (r) => fly.post('pay/unifiedOrder', r, {
+    baseURL: baseURI
+  }),
+  // 二次签名
+  getSencondSign: (r) => fly.get('pay/secondSign', {prepayId: r}, {
+    baseURL: baseURI
+  }),
+  // 获取积分规则
+  getPointsRules: (r) => fly.get('info/getPointsRules', r, {
+    baseURL: baseURI
+  }),
+  // 创建会员充值订单
+  createMemberOrder: (r) => fly.get('memberOrder/generateMemberOrder', r, {
+    baseURL: baseURI
+  }),
+  // 获取会员充值
+  getMemberRecharge: (r) => fly.get('info/getMemberButton', r, {
+    baseURL: baseURI
   })
 }
 export default api

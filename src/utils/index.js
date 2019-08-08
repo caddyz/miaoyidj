@@ -63,6 +63,26 @@ export function getYear (date) {
   return `${year}`
 }
 
+export function rabdomNumber () {
+  let n = ''
+  for (let i = 0; i < 16; i++) {
+    n += Math.floor(Math.random() * 10)
+  }
+  let radom = Math.floor(Math.random() * 10) % 3
+  switch (radom) {
+    case 0:
+      n += '66'
+      break
+    case 1:
+      n += '88'
+      break
+    case 2:
+      n += '99'
+      break
+  }
+  return `${n}`
+}
+
 export default {
   formatNumber,
   formatTime,

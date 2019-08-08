@@ -40,11 +40,17 @@
       @cancel="actionsCancel"
       @select="actionsSelect"
     />
+    <van-toast id="van-toast" />
   </div>
 </template>
 <script>
   import ordercard from '@/components/order_card'
+  import { mapState, mapMutations } from 'vuex'
+  import Toast from '../../static/vant/toast/toast'
   import api from '@/api/index'
+  import { prePay } from '@/utils/pay'
+  import { RECHARGE } from '@/utils/constant'
+
   export default {
     config: {
       navigationBarTitleText: '支付',
@@ -54,11 +60,18 @@
         'van-cell-group': '../../static/vant/cell-group/index',
         'van-cell': '../../static/vant/cell/index',
         'van-action-sheet': '../../static/vant/action-sheet/index',
-        'van-field': '../../static/vant/field/index'
+        'van-field': '../../static/vant/field/index',
+        'van-toast': '../../static/vant/toast/index'
       }
     },
     components: {
       ordercard
+    },
+    computed: {
+      ...mapState([
+        'miaoyiUser',
+        'openid'
+      ])
     },
     mounted () {
       this.getOrderInfo(this.$route.query.orderNo)
@@ -86,6 +99,9 @@
       }
     },
     methods: {
+      ...mapMutations([
+        'saveMiaoyiUser'
+      ]),
       async getOrderInfo (orderNo) {
         const res = await api.getOrderDetail(orderNo)
         if (res.code === 1) {
@@ -106,12 +122,54 @@
         this.show = false
       },
       actionsSelect (e) {
-        console.log('choose:', e.mp.detail.id)
+        let number = parseInt(this.pri)
         if (e.mp.detail.id === 2) {
-          console.log('会员支付')
+          console.log(this.$store.state.miaoyiUser.umemberMoney)
+          console.log(this.pri)
+          if (this.$store.state.miaoyiUser.umemberMoney < number) {
+            this.show = false
+            Toast.fail('会员余额不足，请充值！')
+          } else {
+            this.show = false
+            this.$store.state.miaoyiUser.umemberMoney -= number
+            console.log('会员', this.$store.state.miaoyiUser)
+            this.memberPay({
+              id: this.$store.state.miaoyiUser.uid,
+              name: this.$store.state.miaoyiUser.uname,
+              status: this.$store.state.miaoyiUser.ustatus,
+              openid: this.$store.state.miaoyiUser.uopenid,
+              meney: this.$store.state.miaoyiUser.umemberMoney,
+              avater: this.$store.state.miaoyiUser.uavatar,
+              points: this.$store.state.miaoyiUser.upoints,
+              time: this.$store.state.miaoyiUser.upointUpdateTime
+            })
+            this.saveMiaoyiUser(this.$store.state.miaoyiUser)
+          }
           return
         }
-        console.log('微信支付')
+        if (e.mp.detail.id === 1) {
+          this.show = false
+          prePay({
+            bodyInfo: this.product.pname,
+            outTradeNo: this.$route.query.orderNo,
+            totalFee: this.pri,
+            openid: this.$store.state.openid,
+            attach: RECHARGE
+          })
+        }
+      },
+      async memberPay (user) {
+        const res = await api.memberPay(user)
+        if (res.code === 1) {
+          const r = await api.updateOrder(this.$route.query.orderNo)
+          if (r.code === 1) {
+            Toast.success('购买成功')
+            return
+          }
+          Toast.fail('购买失败！请联系商家')
+        } else {
+          Toast.fail('会员支付失败！请联系商家')
+        }
       }
     }
   }

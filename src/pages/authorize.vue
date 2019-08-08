@@ -21,7 +21,8 @@
     },
     methods: {
       ...mapMutations([
-        'saveMiaoyiUser'
+        'saveMiaoyiUser',
+        'saveOpenid'
       ]),
       async onGotUserInfo (e) {
         if (e.mp.detail.errMsg === 'getUserInfo:ok') {
@@ -41,6 +42,7 @@
         const res = await api.wxLogin({appid: APPID, code: code})
         if (res.openid) {
           const openid = res.openid
+          this.saveOpenid(openid)
           wx.getUserInfo({
             success: (r) => {
               this.userRrgister(openid, r.userInfo.nickName, r.userInfo.avatarUrl)

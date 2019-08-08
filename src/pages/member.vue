@@ -48,6 +48,7 @@
         <i-button @click="recharge" inline type="error">2000元</i-button>
       </div>
       <div style="height: 55rpx"></div>
+      <button v-for="(item,index) in li" :key="index">充{{item.bbase}}送{{item.bgive}}</button>
       <div class="addInput">
         <div style="width: 90%;">
           <van-field
@@ -65,10 +66,17 @@
     <div class="member-foot">
       <i-button @click="recharge" type="error" long="true">充值</i-button>
     </div>
+    <van-toast id="van-toast" />
   </div>
 </template>
 <script>
   import { mapState } from 'vuex'
+  import api from '@/api/index'
+  import { prePay } from '@/utils/pay'
+  import { PAY } from '@/utils/constant'
+  import {createOrderNo} from '@/utils/index'
+  import Toast from '../../static/vant/toast/toast'
+
   export default {
     config: {
       navigationBarTitleText: '会员',
@@ -76,30 +84,125 @@
         'i-tag': '../../static/iview/tag/index',
         'i-icon': '../../static/iview/icon/index',
         'i-button': '../../static/iview/button/index',
-        'van-field': '../../static/vant/field/index'
+        'van-field': '../../static/vant/field/index',
+        'van-toast': '../../static/vant/toast/index'
       }
     },
     computed: {
       ...mapState([
-        'miaoyiUser'
+        'miaoyiUser',
+        'openid'
       ])
     },
-    components: {
+    mounted () {
+      this.getMemberRechargeValue()
+      console.log('shuj', this.$store.state.miaoyiUser)
     },
     data () {
       return {
-        money: ''
+        money: '',
+        li: [],
+        num: [],
+        num1: []
       }
     },
     methods: {
+      async getMemberRechargeValue () {
+        let list = []
+        let list1 = []
+        const res = await api.getMemberRecharge()
+        if (res.code === 1) {
+          this.li = res.data
+          for (let i in res.data) {
+            list.push(res.data[i].bbase)
+            list1.push(res.data[i].bgive)
+          }
+          list.sort(function (a, b) {
+            return a > b ? 1 : -1
+          })
+          list1.sort(function (a, b) {
+            return a > b ? 1 : -1
+          })
+          for (let i in list) {
+            this.num.push(list[i])
+          }
+          for (let i in list1) {
+            this.num1.push(list1[i])
+          }
+        }
+      },
       pointsRule () {
         this.$router.push({path: '/pages/consumeDetail'})
       },
       getMoney (e) {
         this.money = e.mp.detail
       },
-      recharge () {
-        console.log('chong')
+      async recharge () {
+        let n1, n2, n3, n4
+        let t1, t2, t3, t4
+        for (let i = 0; i < this.num.length; i++) {
+          switch (i) {
+            case 0:
+              n1 = this.num[i]
+              break
+            case 1:
+              n2 = this.num[i]
+              break
+            case 2:
+              n3 = this.num[i]
+              break
+            case 3:
+              n4 = this.num[i]
+              break
+          }
+        }
+        for (let i = 0; i < this.num1.length; i++) {
+          switch (i) {
+            case 0:
+              t1 = this.num1[i]
+              break
+            case 1:
+              t2 = this.num1[i]
+              break
+            case 2:
+              t3 = this.num1[i]
+              break
+            case 3:
+              t4 = this.num1[i]
+              break
+          }
+        }
+        const number = parseInt(this.money)
+        let totalFee
+        if (number < n1) {
+          totalFee = number
+        } else if (number >= n1 && number < n2) {
+          totalFee = number + t1
+        } else if (number >= n2 && number < n3) {
+          totalFee = number + t2
+        } else if (number >= n3 && number < n4) {
+          totalFee = number + t3
+        } else {
+          totalFee = number + t4
+        }
+        let orderNo = createOrderNo()
+        const res = await api.createMemberOrder({
+          orderNo: orderNo,
+          uId: this.$store.state.miaoyiUser.uid,
+          totalFee: totalFee,
+          payFee: this.money
+        })
+        if (res.code === 0) {
+          Toast.fail('订单生成失败！')
+          return
+        }
+        prePay({
+          bodyInfo: '会员充值',
+          outTradeNo: orderNo,
+          totalFee: this.money,
+          openid: this.$store.state.openid,
+          attach: PAY
+        })
       }
     }
   }

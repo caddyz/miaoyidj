@@ -2,7 +2,6 @@
   "pages": [
     "pages/index",
     "pages/authorize",
-    "pages/counter",
     "pages/info",
     "pages/details",
     "pages/confirm",
@@ -18,6 +17,7 @@
     "pages/appraiseAdd",
     "pages/getCoupon",
     "pages/discounts",
+    "pages/paySuccess",
     "pages/consumeDetail"
   ],
   "permission": {

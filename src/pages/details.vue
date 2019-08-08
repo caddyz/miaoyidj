@@ -106,7 +106,8 @@
     computed: {
       ...mapState([
         'phone',
-        'productInfo'
+        'productInfo',
+        'miaoyiUser'
       ])
     },
     components: {
@@ -154,6 +155,16 @@
         })
       },
       placeOrder () {
+        if (this.$store.state.miaoyiUser.uname === undefined) {
+          Dialog.confirm({
+            title: '您还未登录',
+            message: '去登录'
+          }).then(() => {
+            this.$router.push({path: '/pages/info', isTab: true})
+          }).catch(() => {
+          })
+          return
+        }
         const url = '/pages/placeOrder'
         this.$router.push(url)
       },

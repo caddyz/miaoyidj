@@ -107,13 +107,13 @@ export default {
     ...mapMutations([
       'saveMiaoyiUser',
       'saveCity',
+      'saveOpenid',
       'saveProductInfo'
     ]),
     indexRouter (e) {
       if (e.currentTarget.dataset.index === '1') {
         this.$router.push({path: '/pages/getCoupon'})
       } else {
-        console.log('获取到的id：', e.currentTarget.dataset.index)
         this.$router.push({path: '/pages/discounts'})
       }
     },
@@ -142,6 +142,7 @@ export default {
     async userLogin (code) {
       const data = await api.wxLogin({appid: APPID, code: code})
       if (data.openid) {
+        this.saveOpenid(data.openid)
         const res = await api.getUserDetail(data.openid)
         if (res.code === 1) {
           this.saveMiaoyiUser(res.data)

@@ -1,30 +1,35 @@
 <template>
-  <div v-if="orderVal.length > 0">
-    <van-tabs sticky animated swipeable :active="active" @change="onChange">
-      <van-tab title="全部订单">
-        <div v-for="(item,index) in orderVal" :key="index">
-          <orderintro :orderVal="item"/>
-        </div>
-      </van-tab>
-      <van-tab title="未支付">
-        <div v-for="(item,index) in noPayVal" :key="index">
-          <orderintro :orderVal="item"/>
-        </div>
-      </van-tab>
-      <van-tab title="已支付">
-        <div v-for="(item,index) in payVal" :key="index">
-          <orderintro :orderVal="item"/>
-        </div>
-      </van-tab>
-      <van-tab title="已完成">
-        <div v-for="(item,index) in finishVal" :key="index">
-          <orderintro :orderVal="item"/>
-        </div>
-      </van-tab>
-    </van-tabs>
+  <div v-if="contro">
+    <div v-if="orderVal.length > 0">
+      <van-tabs sticky animated swipeable :active="active" @change="onChange">
+        <van-tab title="全部订单">
+          <div v-for="(item,index) in orderVal" :key="index">
+            <orderintro :orderVal="item"/>
+          </div>
+        </van-tab>
+        <van-tab title="未支付">
+          <div v-for="(item,index) in noPayVal" :key="index">
+            <orderintro :orderVal="item"/>
+          </div>
+        </van-tab>
+        <van-tab title="已支付">
+          <div v-for="(item,index) in payVal" :key="index">
+            <orderintro :orderVal="item"/>
+          </div>
+        </van-tab>
+        <van-tab title="已完成">
+          <div v-for="(item,index) in finishVal" :key="index">
+            <orderintro :orderVal="item"/>
+          </div>
+        </van-tab>
+      </van-tabs>
+    </div>
+    <div class="order-else" v-else>
+      您还没有订单！
+    </div>
   </div>
-  <div class="order-else" v-else>
-    您还没有订单！
+  <div v-else>
+    你还未登录
   </div>
 </template>
 <script>
@@ -51,6 +56,9 @@
     components: {
       orderintro
     },
+    onShow () {
+      this.contro = this.$store.state.miaoyiUser.uname !== undefined
+    },
     mounted () {
       this.getUserAllOrder()
     },
@@ -60,7 +68,8 @@
         orderVal: [],
         noPayVal: [],
         payVal: [],
-        finishVal: []
+        finishVal: [],
+        contro: true
       }
     },
     methods: {

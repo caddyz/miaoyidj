@@ -9,12 +9,17 @@ const store = new Vuex.Store({
   state: {
     phone: '18116585239',
     city: '',
+    openid: '',
     productInfo: {},
     miaoyiUser: {},
     addressInfo: {},
     couponInfo: {}
   },
   mutations: {
+    saveOpenid: (state, openid) => {
+      const obj = state
+      obj.openid = openid
+    },
     saveMiaoyiUser: (state, user) => {
       const obj = state
       obj.miaoyiUser = user
